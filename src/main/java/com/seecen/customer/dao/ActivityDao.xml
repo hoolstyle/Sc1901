@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.ActivityDao" >
+  <resultMap id="MyResultMap" type="com.seecen.customer.entity.Activity" >
+    <id column="ACT_ID" property="actId" jdbcType="DECIMAL" />
+    <result column="ACT_NAME" property="actName" jdbcType="VARCHAR" />
+    <result column="ACT_DATE" property="actDate" jdbcType="TIMESTAMP" />
+    <result column="ACT_CONTENT" property="actContent" jdbcType="VARCHAR" />
+    <result column="ACT_REMARK" property="actRemark" jdbcType="VARCHAR" />
+    <association property="team" javaType="com.seecen.customer.entity.Team">
+      <id column="team_id" property="teamId"/>
+      <result column="team_name" property="teamName" />
+      <result column="team_introduce" property="teamIntroduce"/>
+      <result column="act_id" property="actId"/>
+      <result column="review_id" property="reviewId"/>
+      <result column="team_remark" property="teamRemark"/>
+     </association>
+  </resultMap>
+  <select id="findActivityByTeam" resultType="com.seecen.customer.entity.Activity" >
+    select a.team_name,b.* from con_team a right join con_activity b on a.team_id=b.team_id
+    <where>
+      <if test="teamName!=null and teamName.length()>0" >
+        a.TEAM_NAME like '%${teamName}%'
+      </if>
+    </where>
+  </select>
+</mapper>

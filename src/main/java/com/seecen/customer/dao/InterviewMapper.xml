@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.InterviewMapper" >
+  <resultMap id="BaseResultMap" type="com.seecen.customer.entity.Interview" >
+    <id column="VIEW_ID" property="viewId" jdbcType="DECIMAL" />
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="COM_ID" property="comId" jdbcType="DECIMAL" />
+    <result column="RESUME_ID" property="resumeId" jdbcType="DECIMAL" />
+    <result column="CON_STATUS" property="conStatus" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="VIEW_TIME" property="viewTime" jdbcType="TIMESTAMP" />
+    <result column="VIEW_DATE" property="viewDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    VIEW_ID, USER_ID, USER_NAME, COM_ID, RESUME_ID, CON_STATUS, REMARK, VIEW_TIME, VIEW_DATE
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.seecen.customer.entity.InterviewExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from CON_INTERVIEW
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from CON_INTERVIEW
+    where VIEW_ID = #{viewId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from CON_INTERVIEW
+    where VIEW_ID = #{viewId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.seecen.customer.entity.InterviewExample" >
+    delete from CON_INTERVIEW
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.seecen.customer.entity.Interview" >
+    insert into CON_INTERVIEW (VIEW_ID, USER_ID, USER_NAME, 
+      COM_ID, RESUME_ID, CON_STATUS, 
+      REMARK, VIEW_TIME, VIEW_DATE
+      )
+    values (SEQ_CON_INTERVIEW.nextval, #{userId,jdbcType=DECIMAL}, #{userName,jdbcType=VARCHAR},
+      #{comId,jdbcType=DECIMAL}, #{resumeId,jdbcType=DECIMAL}, #{conStatus,jdbcType=DECIMAL}, 
+      #{remark,jdbcType=VARCHAR}, #{viewTime,jdbcType=TIMESTAMP}, #{viewDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.seecen.customer.entity.Interview" >
+    insert into CON_INTERVIEW
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="viewId != null" >
+        VIEW_ID,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="userName != null" >
+        USER_NAME,
+      </if>
+      <if test="comId != null" >
+        COM_ID,
+      </if>
+      <if test="resumeId != null" >
+        RESUME_ID,
+      </if>
+      <if test="conStatus != null" >
+        CON_STATUS,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="viewTime != null" >
+        VIEW_TIME,
+      </if>
+      <if test="viewDate != null" >
+        VIEW_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="viewId != null" >
+        #{viewId,jdbcType=DECIMAL},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="comId != null" >
+        #{comId,jdbcType=DECIMAL},
+      </if>
+      <if test="resumeId != null" >
+        #{resumeId,jdbcType=DECIMAL},
+      </if>
+      <if test="conStatus != null" >
+        #{conStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="viewTime != null" >
+        #{viewTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="viewDate != null" >
+        #{viewDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.seecen.customer.entity.InterviewExample" resultType="java.lang.Integer" >
+    select count(*) from CON_INTERVIEW
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update CON_INTERVIEW
+    <set >
+      <if test="record.viewId != null" >
+        VIEW_ID = #{record.viewId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.userId != null" >
+        USER_ID = #{record.userId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.userName != null" >
+        USER_NAME = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.comId != null" >
+        COM_ID = #{record.comId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.resumeId != null" >
+        RESUME_ID = #{record.resumeId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.conStatus != null" >
+        CON_STATUS = #{record.conStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.viewTime != null" >
+        VIEW_TIME = #{record.viewTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.viewDate != null" >
+        VIEW_DATE = #{record.viewDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update CON_INTERVIEW
+    set VIEW_ID = #{record.viewId,jdbcType=DECIMAL},
+      USER_ID = #{record.userId,jdbcType=DECIMAL},
+      USER_NAME = #{record.userName,jdbcType=VARCHAR},
+      COM_ID = #{record.comId,jdbcType=DECIMAL},
+      RESUME_ID = #{record.resumeId,jdbcType=DECIMAL},
+      CON_STATUS = #{record.conStatus,jdbcType=DECIMAL},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      VIEW_TIME = #{record.viewTime,jdbcType=TIMESTAMP},
+      VIEW_DATE = #{record.viewDate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.seecen.customer.entity.Interview" >
+    update CON_INTERVIEW
+    <set >
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="userName != null" >
+        USER_NAME = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="comId != null" >
+        COM_ID = #{comId,jdbcType=DECIMAL},
+      </if>
+      <if test="resumeId != null" >
+        RESUME_ID = #{resumeId,jdbcType=DECIMAL},
+      </if>
+      <if test="conStatus != null" >
+        CON_STATUS = #{conStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="viewTime != null" >
+        VIEW_TIME = #{viewTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="viewDate != null" >
+        VIEW_DATE = #{viewDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where VIEW_ID = #{viewId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.seecen.customer.entity.Interview" >
+    update CON_INTERVIEW
+    set USER_ID = #{userId,jdbcType=DECIMAL},
+      USER_NAME = #{userName,jdbcType=VARCHAR},
+      COM_ID = #{comId,jdbcType=DECIMAL},
+      RESUME_ID = #{resumeId,jdbcType=DECIMAL},
+      CON_STATUS = #{conStatus,jdbcType=DECIMAL},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      VIEW_TIME = #{viewTime,jdbcType=TIMESTAMP},
+      VIEW_DATE = #{viewDate,jdbcType=TIMESTAMP}
+    where VIEW_ID = #{viewId,jdbcType=DECIMAL}
+  </update>
+</mapper>

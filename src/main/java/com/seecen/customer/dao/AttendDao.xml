@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.AttendDao" >
+  <resultMap id="ResultMap" type="com.seecen.customer.entity.Attendance" >
+    <result column="ATT_ID" property="attId" jdbcType="DECIMAL" />
+    <result column="CUSTOMER_ID" property="customerId" jdbcType="DECIMAL" />
+    <result column="ATT_STATE" property="attState" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="ATT_TIME" property="attTime" jdbcType="TIMESTAMP" />
+    <association property="customer"
+                 column="customer_ID"
+                 resultMap="com.seecen.customer.dao.CustomerMapper.BaseResultMap">
+    </association>
+    <association property="team"
+                 column="TEAM_ID"
+                 resultMap="com.seecen.customer.dao.TeamMapper.BaseResultMap">
+    </association>
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ATT_ID, CUSTOMER_ID, ATT_STATE, REMARK, ATT_TIME
+  </sql>
+  <select id="findAttendanceAndCustomer" resultMap="ResultMap" parameterType="java.lang.Integer">
+    select
+    *
+    from CON_ATTENDANCE a INNER JOIN CON_CUSTOMER b ON a.CUSTOMER_ID = b.CUSTOMER_ID
+    INNER JOIN  CON_TEAM c ON b.TEAM_ID = c.TEAM_ID
+    WHERE 1=1
+    <if test="id!=null">
+       AND c.TEAM_ID = #{id} AND to_char(a.ATT_TIME,'dd')=to_char(sysdate,'dd')
+    </if>
+    <if test="cId!=null">
+      AND b.CUSTOMER_ID = #{cId} AND to_char(a.ATT_TIME,'MM')=to_char(sysdate,'MM')
+    </if>
+    ORDER BY a.CUSTOMER_ID, a.ATT_TIME
+  </select>
+  <select id="findClass" resultMap="ResultMap" >
+    select
+    DISTINCT TEAM_NAME,TEAM_ID
+    from CON_TEAM
+  </select>
+
+  <select id="findCustomer" resultMap="ResultMap" >
+    select
+    *
+    from CON_CUSTOMER WHERE TEAM_ID = #{tId}
+  </select>
+  <select id="findCustomerName" resultMap="ResultMap">
+    select
+    *
+    from CON_CUSTOMER WHERE CUSTOMER_ID = #{id}
+  </select>
+
+</mapper>

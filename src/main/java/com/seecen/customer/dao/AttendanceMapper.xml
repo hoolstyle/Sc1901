@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.AttendanceMapper" >
+  <resultMap id="BaseResultMap" type="com.seecen.customer.entity.Attendance" >
+    <result column="ATT_ID" property="attId" jdbcType="DECIMAL" />
+    <result column="CUSTOMER_ID" property="customerId" jdbcType="DECIMAL" />
+    <result column="ATT_STATE" property="attState" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="ATT_TIME" property="attTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ATT_ID, CUSTOMER_ID, ATT_STATE, REMARK, ATT_TIME
+  </sql>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    SELECT * FROM CON_ATTENDANCE WHERE ATT_ID = #{id}
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.seecen.customer.entity.AttendanceExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from CON_ATTENDANCE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <delete id="deleteByExample" parameterType="com.seecen.customer.entity.AttendanceExample" >
+    delete from CON_ATTENDANCE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.seecen.customer.entity.Attendance" >
+    insert into CON_ATTENDANCE (ATT_ID, CUSTOMER_ID, ATT_STATE, 
+      REMARK, ATT_TIME)
+    values (SEQ_CON_ATTENDANCE.nextval, #{customerId,jdbcType=DECIMAL}, #{attState,jdbcType=DECIMAL},
+      #{remark,jdbcType=VARCHAR}, #{attTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.seecen.customer.entity.Attendance" >
+    insert into CON_ATTENDANCE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="attId != null" >
+        ATT_ID,
+      </if>
+      <if test="customerId != null" >
+        CUSTOMER_ID,
+      </if>
+      <if test="attState != null" >
+        ATT_STATE,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="attTime != null" >
+        ATT_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="attId != null" >
+        #{attId,jdbcType=DECIMAL},
+      </if>
+      <if test="customerId != null" >
+        #{customerId,jdbcType=DECIMAL},
+      </if>
+      <if test="attState != null" >
+        #{attState,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="attTime != null" >
+        #{attTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.seecen.customer.entity.AttendanceExample" resultType="java.lang.Integer" >
+    select count(*) from CON_ATTENDANCE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update CON_ATTENDANCE
+    <set >
+      <if test="record.attId != null" >
+        ATT_ID = #{record.attId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.customerId != null" >
+        CUSTOMER_ID = #{record.customerId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.attState != null" >
+        ATT_STATE = #{record.attState,jdbcType=DECIMAL},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.attTime != null" >
+        ATT_TIME = #{record.attTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update CON_ATTENDANCE
+    set ATT_ID = #{record.attId,jdbcType=DECIMAL},
+      CUSTOMER_ID = #{record.customerId,jdbcType=DECIMAL},
+      ATT_STATE = #{record.attState,jdbcType=DECIMAL},
+      REMARK = #{record.remark,jdbcType=VARCHAR},
+      ATT_TIME = #{record.attTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleByPrimarySelective" parameterType="com.seecen.customer.entity.Attendance" >
+    update CON_ATTENDANCE
+    <set>
+      <if test="customerId != null" >
+        CUSTOMER_ID = #{customerId,jdbcType=DECIMAL},
+      </if>
+      <if test="attState != null" >
+        ATT_STATE = #{attState,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="attTime != null" >
+        ATT_TIME = #{attTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ATT_ID = #{attId,jdbcType=DECIMAL}
+  </update>
+</mapper>

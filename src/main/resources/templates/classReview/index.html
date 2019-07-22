@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="component/adminCommons::head(后台主页)"></head>
+<body>
+    <!-- 顶部开始 -->
+    <div class="container">
+        <div class="logo"><a href="./index.html">X-admin v2.0</a></div>
+        <div class="left_open">
+            <i title="展开左侧栏" class="iconfont">&#xe699;</i>
+        </div>
+        <ul class="layui-nav left fast-add" lay-filter="">
+          <li class="layui-nav-item">
+            <a href="javascript:;">+新增</a>
+            <dl class="layui-nav-child"> <!-- 二级菜单 -->
+              <dd><a onclick="x_admin_show('资讯','http://www.baidu.com')"><i class="iconfont">&#xe6a2;</i>资讯</a></dd>
+              <dd><a onclick="x_admin_show('图片','http://www.baidu.com')"><i class="iconfont">&#xe6a8;</i>图片</a></dd>
+               <dd><a onclick="x_admin_show('用户','http://www.baidu.com')"><i class="iconfont">&#xe6b8;</i>用户</a></dd>
+            </dl>
+          </li>
+        </ul>
+        <ul class="layui-nav right" lay-filter="">
+          <li class="layui-nav-item">
+            <a href="javascript:;">admin</a>
+            <dl class="layui-nav-child"> <!-- 二级菜单 -->
+              <dd><a onclick="x_admin_show('个人信息','http://www.baidu.com')">个人信息</a></dd>
+              <dd><a onclick="x_admin_show('切换帐号','http://www.baidu.com')">切换帐号</a></dd>
+              <dd><a href="./login.html">退出</a></dd>
+            </dl>
+          </li>
+          <li class="layui-nav-item to-index"><a href="/">前台首页</a></li>
+        </ul>
+        
+    </div>
+    <!-- 顶部结束 -->
+    <!-- 中部开始 -->
+     <!-- 左侧菜单开始 -->
+    <div class="left-nav">
+      <div id="side-nav">
+        <ul id="nav">
+            <li>
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe6b8;</i>
+                    <cite>营销管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="/customer/pageList">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>客户信息</cite>
+                        </a>
+                    </li >
+                    <li>
+                        <a _href="/channel/pageList">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>渠道管理</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="/center/pageList">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>中心管理</cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe723;</i>
+                    <cite>就业管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="/entry/list">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>入职管理</cite>
+                        </a>
+                    </li >
+                </ul>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="/view/list">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>面试管理</cite>
+                        </a>
+                    </li >
+                </ul>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="/company/list">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>公司管理</cite>
+                        </a>
+                    </li >
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe6b8;</i>
+                    <cite>班级管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="team/list">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>班级列表</cite>
+                        </a>
+                    </li >
+                    <li>
+                        <a _href="team/findStudent">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>学员检索</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="iconfont">&#xe70b;</i>
+                            <cite>班级活动</cite>
+                            <i class="iconfont nav_right">&#xe697;</i>
+                        </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a _href="activity/findList">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>活动列表</cite>
+                                    
+                                </a>
+                            </li >
+                            <li>
+                                <a _href="activity/list">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>活动审批</cite>
+                                    
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe723;</i>
+                    <cite>评审管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="review/list">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>评审列表</cite>
+                        </a>
+                    </li >
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe6b8;</i>
+                    <cite>学员管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="backend/list.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>会员列表</cite>
+                        </a>
+                    </li >
+                    <li>
+                        <a _href="backend/attend/list.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>考勤管理</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="backend/attend/search.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>查看考勤</cite>
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="backend/talk/list.html">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>职发谈话</cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+      </div>
+    </div>
+    <!-- <div class="x-slide_left"></div> -->
+    <!-- 左侧菜单结束 -->
+    <!-- 右侧主体开始 -->
+    <div class="page-content">
+        <div class="layui-tab tab" lay-filter="xbs_tab" lay-allowclose="false">
+          <ul class="layui-tab-title">
+            <li class="home"><i class="layui-icon">&#xe68e;</i>我的桌面</li>
+          </ul>
+          <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <iframe src='./welcome.html' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="page-content-bg"></div>
+    <!-- 右侧主体结束 -->
+    <!-- 中部结束 -->
+    <!-- 底部开始 -->
+    <div class="footer" th:include="component/adminCommons::copy">
+    </div>
+    <!-- 底部结束 -->
+</body>
+</html>

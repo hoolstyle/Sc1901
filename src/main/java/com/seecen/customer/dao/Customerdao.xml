@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.CustomerDao">
+  <resultMap id="CustomerAndTeamMap" type="com.seecen.customer.entity.Customer" >
+    <id column="CUSTOMER_ID" property="customerId" jdbcType="DECIMAL" />
+    <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_SEX" property="customerSex" jdbcType="DECIMAL" />
+    <result column="CUSTOMER_PHONE" property="customerPhone" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_ICON" property="customerIcon" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_DATE" property="customerDate" jdbcType="TIMESTAMP" />
+    <result column="CHANNEL_ID" property="channelId" jdbcType="DECIMAL" />
+    <result column="CENTER_ID" property="centerId" jdbcType="DECIMAL" />
+    <result column="TEAM_ID" property="teamId" jdbcType="DECIMAL" />
+    <result column="CUSTOMER_FLAG" property="customerFlag" jdbcType="DECIMAL" />
+    <result column="CUSTOMER_REMARK" property="customerRemark" jdbcType="VARCHAR" />
+    <association property="team"
+                 column="TEAM_ID"
+                 resultMap="com.seecen.customer.dao.TeamMapper.BaseResultMap">
+    </association>
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_SEX, CUSTOMER_PHONE, CUSTOMER_ICON, CUSTOMER_DATE, 
+    CHANNEL_ID, CENTER_ID, TEAM_ID, CUSTOMER_FLAG, CUSTOMER_REMARK
+  </sql>
+  <select id="selectCustomerAndTeamByExample" resultMap="CustomerAndTeamMap" parameterType="com.seecen.customer.entity.CustomerExample" >
+    select a.*,b.TEAM_NAME from CON_CUSTOMER a INNER JOIN CON_TEAM b ON a.TEAM_ID = b.TEAM_ID
+    WHERE 1=1
+    <if test="_parameter != null">
+      AND a.TEAM_ID = #{id}
+    </if>
+      AND a.CUSTOMER_FLAG=1
+  </select>
+  <select id="findById" resultMap="CustomerAndTeamMap" parameterType="com.seecen.customer.entity.CustomerExample">
+    select a.*,b.TEAM_NAME from CON_CUSTOMER a INNER JOIN CON_TEAM b ON a.TEAM_ID = b.TEAM_ID
+    <if test="_parameter != null">
+      WHERE a.CUSTOMER_ID = #{id}
+    </if>
+  </select>
+  <select id="findTeam" resultMap="CustomerAndTeamMap" parameterType="com.seecen.customer.entity.CustomerExample">
+    select * from CON_TEAM
+  </select>
+
+
+</mapper>

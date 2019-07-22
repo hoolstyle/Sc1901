@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="component/adminCommons::head(修改成绩)"></head>
+<body>
+<div class="x-body layui-anim layui-anim-up">
+    <form class="layui-form">
+        <input type="hidden" name="reviewId" th:value="${review.reviewId}">
+        <div class="layui-form-item">
+            <label for="reviewProject" class="layui-form-label">
+                <span class="x-red">*</span>评审项目
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="reviewProject" name="reviewProject" th:value="${review.reviewProject}"
+                       required="" disabled autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="reviewCase" class="layui-form-label">
+                <span class="x-red">*</span>评审情况
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="reviewCase" name="reviewCase" th:value="${review.reviewCase}"
+                       required="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="reviewGrade" class="layui-form-label">
+                <span class="x-red">*</span>评审成绩
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="reviewGrade" name="reviewGrade" th:value="${review.reviewGrade}"
+                       required="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="x-red">*</span>学生编号
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="customerId" name="customerId" th:value="${review.customerId}"
+                       required="" disabled autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="x-red">*</span>班级编号
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="teamId" name="teamId" th:value="${review.teamId}"
+                       required="" disabled autocomplete="off" class="layui-input">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label  class="layui-form-label">
+            </label>
+            <button  class="layui-btn" lay-filter="update" lay-submit="">
+                修改成绩
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form','layer'], function(){
+        $ = layui.jquery;
+        var form = layui.form
+            ,layer = layui.layer;
+
+        //监听提交
+        form.on('submit(update)', function(data){
+            console.log(data);
+            $.ajax({
+                url:"review/saveOrUpdate",
+                type:"post",
+                data:data.field,
+                dataType:"json",
+                success:function (r) {
+                    if(r==1){
+                        layer.alert("打分成功", {icon: 6},function () {
+                            parent.location.reload();
+                        });
+                    }else{
+                        layer.alert("打分失败", {icon: 3});
+                    }
+                }
+            })
+
+            return false;
+        });
+
+
+
+        form.on('select(selectStu)', function (data) {
+            //触发内容
+            console.log(data.value);
+            $.ajax({
+                url:"review/bindingTeam/"+data.value,
+                type:"post",
+                dataType:"json",
+                success:function (r) {
+                }
+            })
+        });
+
+    });
+</script>
+</body>
+
+</html>

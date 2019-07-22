@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="component/adminCommons::head(增加学员)"></head>
+<body>
+<div class="x-body layui-anim layui-anim-up">
+    <form class="layui-form">
+        <input type="hidden" name="customerId" th:value="${stu.getCustomerId()}">
+        <div class="layui-form-item">
+            <label for="customerName" class="layui-form-label">
+                <span class="x-red">*</span>学生名
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="customerName" name="customerName" th:value="${stu.getCustomerName()}"
+                       required="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="x-red">*</span>学生性别
+            </label>
+            <div class="layui-input-inline">
+                <input type="radio" title="男"  name="customerSex" value="1" th:checked="${stu.getCustomerSex()==1}" >
+                <input type="radio" title="女"  name="customerSex" value="0" th:checked="${stu.getCustomerSex()==0}" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="customerPhone" class="layui-form-label">
+                <span class="x-red">*</span>联系方式
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="customerPhone" name="customerPhone" th:value="${stu.getCustomerPhone()}"
+                       required="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label  class="layui-form-label">
+                <span class="x-red">*</span>重新分班
+            </label>
+            <div class="layui-input-inline">
+                <select name="teamId" lay-verify="">
+                    <option>选择班级</option>
+                    <option th:each="team:${list}"  th:value="${team.teamId}"
+                     th:text="${team.teamName}" th:selected="${team.teamId==stu.teamId}">
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label  class="layui-form-label">
+            </label>
+            <button  class="layui-btn" lay-filter="add" lay-submit="">
+                分班
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form','layer'], function(){
+        $ = layui.jquery;
+        var form = layui.form
+            ,layer = layui.layer;
+
+        //自定义验证规则
+        form.verify({
+            username: function(value){
+                if(value.length < 3){
+                    return '昵称至少得5个字符啊';
+                }
+            }
+            ,pass: [/(.+){6,12}$/, '密码必须6到12位']
+            ,repass: function(value){
+                if($('#L_pass').val()!=$('#L_repass').val()){
+                    return '两次密码不一致';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(add)', function(data){
+            console.log(data);
+            $.ajax({
+                url:"team/addStudent",
+                type:"post",
+                data:data.field,
+                dataType:"json",
+                success:function (r) {
+                    if(r==1){
+                        layer.alert("分班成功", {icon: 6},function () {
+                            parent.location.reload();
+                        });
+                    }else{
+                        layer.alert("分班失败", {icon: 3});
+                    }
+                }
+            })
+
+            return false;
+        });
+
+
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.TeamDao" >
+ 
+  <select id="findStudentByFlag" resultType="com.seecen.customer.entity.Customer">
+      select a.team_id,b.* from con_team a right join con_customer b on a.team_id=b.team_id
+      <where>
+        b.customer_flag=1
+      </where>
+  </select>
+</mapper>

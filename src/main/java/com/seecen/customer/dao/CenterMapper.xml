@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.CenterMapper" >
+  <resultMap id="BaseResultMap" type="com.seecen.customer.entity.Center" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="CENTER_NAME" property="centerName" jdbcType="VARCHAR" />
+    <result column="CENTER_ADDRESS" property="centerAddress" jdbcType="VARCHAR" />
+    <result column="CENTER_PHONE" property="centerPhone" jdbcType="VARCHAR" />
+    <result column="CENTER_FLAG" property="centerFlag" jdbcType="DECIMAL" />
+
+    <collection property="customerList" ofType="com.seecen.customer.entity.Customer">
+      <id column="CUSTOMER_ID" property="customerId" jdbcType="DECIMAL" />
+      <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
+      <result column="CUSTOMER_SEX" property="customerSex" jdbcType="DECIMAL" />
+      <result column="CUSTOMER_PHONE" property="customerPhone" jdbcType="VARCHAR" />
+      <result column="CUSTOMER_IMG" property="customerImg" jdbcType="VARCHAR" />
+      <result column="CUSTOMER_DATE" property="customerDate" jdbcType="TIMESTAMP" />
+      <result column="CUSTOMER_FLAG" property="customerFlag" jdbcType="DECIMAL" />
+      <result column="CHANNEL_ID" property="channelId" jdbcType="DECIMAL" />
+      <result column="CENTER_ID" property="centerId" jdbcType="DECIMAL" />
+      <result column="TEAM_ID" property="teamId" jdbcType="DECIMAL" />
+      <result column="CUSTOMER_REMARK" property="customerRemark" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+  <select id="findList" resultMap="BaseResultMap">
+    select * from
+(select * from CON_CENTER cen left join CON_CUSTOMER cus on cen.ID=cus.CENTER_ID) a
+ left join CON_CHANNEL cha on a.CHANNEL_ID=cha.ID where a.ID=#{id}
+  </select>
+
+  <select id="accountCenter" resultType="int" parameterType="String">
+    select count(CENTER_NAME) from CON_CENTER where CENTER_NAME=#{centerName}
+  </select>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, CENTER_NAME, CENTER_ADDRESS, CENTER_PHONE, CENTER_FLAG
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.seecen.customer.entity.CenterExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from CON_CENTER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from CON_CENTER
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from CON_CENTER
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.seecen.customer.entity.CenterExample" >
+    delete from CON_CENTER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.seecen.customer.entity.Center" >
+    insert into CON_CENTER (ID, CENTER_NAME, CENTER_ADDRESS, 
+      CENTER_PHONE, CENTER_FLAG)
+    values (SEQ_CON_CENTER.nextval, #{centerName,jdbcType=VARCHAR}, #{centerAddress,jdbcType=VARCHAR},
+      #{centerPhone,jdbcType=VARCHAR}, #{centerFlag,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.seecen.customer.entity.Center" >
+    insert into CON_CENTER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="centerName != null" >
+        CENTER_NAME,
+      </if>
+      <if test="centerAddress != null" >
+        CENTER_ADDRESS,
+      </if>
+      <if test="centerPhone != null" >
+        CENTER_PHONE,
+      </if>
+      <if test="centerFlag != null" >
+        CENTER_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="centerName != null" >
+        #{centerName,jdbcType=VARCHAR},
+      </if>
+      <if test="centerAddress != null" >
+        #{centerAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="centerPhone != null" >
+        #{centerPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="centerFlag != null" >
+        #{centerFlag,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.seecen.customer.entity.CenterExample" resultType="java.lang.Integer" >
+    select count(*) from CON_CENTER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update CON_CENTER
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.centerName != null" >
+        CENTER_NAME = #{record.centerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.centerAddress != null" >
+        CENTER_ADDRESS = #{record.centerAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.centerPhone != null" >
+        CENTER_PHONE = #{record.centerPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.centerFlag != null" >
+        CENTER_FLAG = #{record.centerFlag,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update CON_CENTER
+    set ID = #{record.id,jdbcType=DECIMAL},
+      CENTER_NAME = #{record.centerName,jdbcType=VARCHAR},
+      CENTER_ADDRESS = #{record.centerAddress,jdbcType=VARCHAR},
+      CENTER_PHONE = #{record.centerPhone,jdbcType=VARCHAR},
+      CENTER_FLAG = #{record.centerFlag,jdbcType=DECIMAL}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.seecen.customer.entity.Center" >
+    update CON_CENTER
+    <set >
+      <if test="centerName != null" >
+        CENTER_NAME = #{centerName,jdbcType=VARCHAR},
+      </if>
+      <if test="centerAddress != null" >
+        CENTER_ADDRESS = #{centerAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="centerPhone != null" >
+        CENTER_PHONE = #{centerPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="centerFlag != null" >
+        CENTER_FLAG = #{centerFlag,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.seecen.customer.entity.Center" >
+    update CON_CENTER
+    set CENTER_NAME = #{centerName,jdbcType=VARCHAR},
+      CENTER_ADDRESS = #{centerAddress,jdbcType=VARCHAR},
+      CENTER_PHONE = #{centerPhone,jdbcType=VARCHAR},
+      CENTER_FLAG = #{centerFlag,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

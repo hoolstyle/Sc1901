@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="component/commons::head('列表页面')"> </head>
+<!-- 引入 echarts.js -->
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+<script>
+    function checkOption(id,value) {
+        var select=document.getElementById(id);
+        var options=select.options;
+        for(var i=0;i<options.length;i++){
+            if(options[i].value==value){
+                options[i].selected=true;
+                break;
+            }
+        }
+    }
+</script>
+  <body>
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">演示</a>
+        <a>
+          <cite>导航元素</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+      <div class="layui-row" th:if="${classId} eq 0">
+        <form class="layui-form layui-col-md12 x-so" th:action="@{/entry/list}">
+          <input type="hidden" name="pageNum">
+          <!--<input type="text" name="classId" th:value="${classId}" placeholder="请输入班级" autocomplete="off" class="layui-input">-->
+          <div class="layui-input-inline">
+          <select name="classId" lay-search class="layui-input">
+              <option value="0">总入职详情</option>
+              <option th:each="class,S:${class}" th:text="${class.teamName}" th:value="${class.teamId}"></option>
+          </select>
+          </div>
+<!--
+          <input type="text" name="username" th:value="${name}"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
+-->
+          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+        </form>
+      </div>
+      <div class="layui-row" th:if="${classId} ne 0">
+        <form class="layui-form layui-col-md12 x-so" th:action="@{/entry/list}">
+          <input type="hidden" name="pageNum">
+          <!--<input type="text" name="classId" th:value="${classId}" placeholder="请输入班级" autocomplete="off" class="layui-input">-->
+          <div class="layui-input-inline">
+            <select name="classId" lay-search class="layui-input" id="classId">
+              <option value="0">总入职详情</option>
+              <option th:each="class,S:${class}" th:text="${class.teamName}" th:value="${class.teamId}"></option>
+            </select>
+          </div>
+          <input type="text" name="username" th:value="${name}"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
+          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+        </form>
+      </div>
+
+
+      <div th:if="${classId} eq 0">
+      <div id="main" style="width: 600px;height:400px; margin: 0 auto;"></div>
+      </div>
+      <div th:if="${classId} ne 0">
+        <span class="x-right" style="line-height:40px" th:text="'共有数据：'+${pageInfo.total}+'条'">共有数据：${} 条</span>
+        <table class="layui-table">
+                <thead>
+                  <tr>
+                    <th>序号</th>
+                    <th>学员ID</th>
+                    <th>姓名</th>
+                    <th>入职状态</th>
+                    <th>公司</th>
+                </thead>
+                <tbody>
+                  <tr th:each="entry,S:${pageInfo.list}">
+                    <td th:text="${S.count}">2</td>
+                    <td th:text="${entry.userId}">23</td>
+                    <td th:text="${entry.entryName}">admin</td>
+                    <td class="td-status" th:if="${entry.entryStatus} eq 0">
+                      <span class="layui-btn layui-btn-normal layui-btn-mini layui-btn-disabled">未入职</span>
+                    </td>
+                    <td class="td-status" th:if="${entry.entryStatus} eq 1">
+                      <span class="layui-btn layui-btn-normal layui-btn-mini ">面试中</span>
+                    </td>
+                    <td class="td-status" th:if="${entry.entryStatus} eq 2">
+                      <span class="layui-btn layui-btn-normal layui-btn-mini layui-btn-warm">已入职</span>
+                    </td>
+                    <td th:text="${entry.remark}">0</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="page" th:replace="component/commons::page"></div>
+      </div>
+
+
+    </div>
+    <script>
+      if($("#classId")!=0){
+          var id=[[${classId}]];
+          checkOption('classId',id);
+      }
+
+      layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#start' //指定元素
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#end' //指定元素
+        });
+      });
+
+       /*用户-停用*/
+      function member_stop(obj,id){
+          layer.confirm('确认要停用吗？',function(index){
+
+              if($(obj).attr('title')=='启用'){
+
+                //发异步把用户状态进行更改
+                $(obj).attr('title','停用')
+                $(obj).find('i').html('&#xe62f;');
+
+                $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
+                layer.msg('已停用!',{icon: 5,time:1000});
+
+              }else{
+                $(obj).attr('title','启用')
+                $(obj).find('i').html('&#xe601;');
+
+                $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
+                layer.msg('已启用!',{icon: 5,time:1000});
+              }
+              
+          });
+      }
+
+      /*用户-删除*/
+      function member_del(obj,id){
+          layer.confirm('确认要删除吗？',function(index){
+              //发异步删除数据
+              $(obj).parents("tr").remove();
+              layer.msg('已删除!',{icon:1,time:1000});
+          });
+      }
+
+
+
+      function delAll (argument) {
+
+        var data = tableCheck.getData();
+  
+        layer.confirm('确认要删除吗？'+data,function(index){
+            //捉到所有被选中的，发异步进行删除
+            layer.msg('删除成功', {icon: 1});
+            $(".layui-form-checked").not('.header').parents('tr').remove();
+        });
+      }
+    </script>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        var a=[[${a}]];
+        var b=[[${b}]];
+        var c=[[${c}]];
+
+        // 指定图表的配置项和数据
+//        var app.title = '环形图';
+
+        option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                x: 'left',
+                data:['未入职','面试中','已入职']
+            },
+            series: [
+                {
+                    name:'入职信息',
+                    type:'pie',
+                    radius: ['50%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            show: true,
+                            textStyle: {
+                                fontSize: '30',
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data:[
+                        {value:a, name:'未入职'},
+                        {value:b, name:'面试中'},
+                        {value:c, name:'已入职'}
+                    ]
+                }
+            ]
+        };
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+  </body>
+
+</html>

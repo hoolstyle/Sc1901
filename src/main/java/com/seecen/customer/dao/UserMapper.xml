@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.seecen.customer.entity.User" >
+    <id column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="USER_PSW" property="userPsw" jdbcType="VARCHAR" />
+    <result column="USER_ICON" property="userIcon" jdbcType="VARCHAR" />
+    <result column="USER_SEX" property="userSex" jdbcType="DECIMAL" />
+    <result column="USER_PHONE" property="userPhone" jdbcType="VARCHAR" />
+    <result column="USER_SALT" property="userSalt" jdbcType="VARCHAR" />
+    <result column="USER_CREATETIME" property="userCreatetime" jdbcType="TIMESTAMP" />
+    <result column="USER_STATUS" property="userStatus" jdbcType="DECIMAL" />
+    <result column="USER_REMARK" property="userRemark" jdbcType="VARCHAR" />
+    <result column="ROLE_ID" property="roleId" jdbcType="DECIMAL" />
+    <result column="TEAM_ID" property="teamId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    USER_ID, USER_NAME, USER_PSW, USER_ICON, USER_SEX, USER_PHONE, USER_SALT, USER_CREATETIME, 
+    USER_STATUS, USER_REMARK, ROLE_ID, TEAM_ID
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.seecen.customer.entity.UserExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from CON_USER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from CON_USER
+    where USER_ID = #{userId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from CON_USER
+    where USER_ID = #{userId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.seecen.customer.entity.UserExample" >
+    delete from CON_USER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.seecen.customer.entity.User" >
+    insert into CON_USER (USER_ID, USER_NAME, USER_PSW, 
+      USER_ICON, USER_SEX, USER_PHONE, 
+      USER_SALT, USER_CREATETIME, USER_STATUS, 
+      USER_REMARK, ROLE_ID, TEAM_ID
+      )
+    values (#{userId,jdbcType=DECIMAL}, #{userName,jdbcType=VARCHAR}, #{userPsw,jdbcType=VARCHAR}, 
+      #{userIcon,jdbcType=VARCHAR}, #{userSex,jdbcType=DECIMAL}, #{userPhone,jdbcType=VARCHAR}, 
+      #{userSalt,jdbcType=VARCHAR}, #{userCreatetime,jdbcType=TIMESTAMP}, #{userStatus,jdbcType=DECIMAL}, 
+      #{userRemark,jdbcType=VARCHAR}, #{roleId,jdbcType=DECIMAL}, #{teamId,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.seecen.customer.entity.User" >
+    insert into CON_USER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        USER_ID,
+      <if test="userName != null" >
+        USER_NAME,
+      </if>
+      <if test="userPsw != null" >
+        USER_PSW,
+      </if>
+      <if test="userIcon != null" >
+        USER_ICON,
+      </if>
+      <if test="userSex != null" >
+        USER_SEX,
+      </if>
+      <if test="userPhone != null" >
+        USER_PHONE,
+      </if>
+      <if test="userSalt != null" >
+        USER_SALT,
+      </if>
+      <if test="userCreatetime != null" >
+        USER_CREATETIME,
+      </if>
+      <if test="userStatus != null" >
+        USER_STATUS,
+      </if>
+      <if test="userRemark != null" >
+        USER_REMARK,
+      </if>
+      <if test="roleId != null" >
+        ROLE_ID,
+      </if>
+      <if test="teamId != null" >
+        TEAM_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+        SEQ_CON_USER.nextval,
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPsw != null" >
+        #{userPsw,jdbcType=VARCHAR},
+      </if>
+      <if test="userIcon != null" >
+        #{userIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="userSex != null" >
+        #{userSex,jdbcType=DECIMAL},
+      </if>
+      <if test="userPhone != null" >
+        #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="userSalt != null" >
+        #{userSalt,jdbcType=VARCHAR},
+      </if>
+      <if test="userCreatetime != null" >
+        #{userCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userStatus != null" >
+        #{userStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="userRemark != null" >
+        #{userRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="teamId != null" >
+        #{teamId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.seecen.customer.entity.UserExample" resultType="java.lang.Integer" >
+    select count(*) from CON_USER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update CON_USER
+    <set >
+      <if test="record.userId != null" >
+        USER_ID = #{record.userId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.userName != null" >
+        USER_NAME = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userPsw != null" >
+        USER_PSW = #{record.userPsw,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userIcon != null" >
+        USER_ICON = #{record.userIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userSex != null" >
+        USER_SEX = #{record.userSex,jdbcType=DECIMAL},
+      </if>
+      <if test="record.userPhone != null" >
+        USER_PHONE = #{record.userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userSalt != null" >
+        USER_SALT = #{record.userSalt,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userCreatetime != null" >
+        USER_CREATETIME = #{record.userCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.userStatus != null" >
+        USER_STATUS = #{record.userStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="record.userRemark != null" >
+        USER_REMARK = #{record.userRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.roleId != null" >
+        ROLE_ID = #{record.roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.teamId != null" >
+        TEAM_ID = #{record.teamId,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update CON_USER
+    set USER_ID = #{record.userId,jdbcType=DECIMAL},
+      USER_NAME = #{record.userName,jdbcType=VARCHAR},
+      USER_PSW = #{record.userPsw,jdbcType=VARCHAR},
+      USER_ICON = #{record.userIcon,jdbcType=VARCHAR},
+      USER_SEX = #{record.userSex,jdbcType=DECIMAL},
+      USER_PHONE = #{record.userPhone,jdbcType=VARCHAR},
+      USER_SALT = #{record.userSalt,jdbcType=VARCHAR},
+      USER_CREATETIME = #{record.userCreatetime,jdbcType=TIMESTAMP},
+      USER_STATUS = #{record.userStatus,jdbcType=DECIMAL},
+      USER_REMARK = #{record.userRemark,jdbcType=VARCHAR},
+      ROLE_ID = #{record.roleId,jdbcType=DECIMAL},
+      TEAM_ID = #{record.teamId,jdbcType=DECIMAL}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.seecen.customer.entity.User" >
+    update CON_USER
+    <set >
+      <if test="userName != null" >
+        USER_NAME = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPsw != null" >
+        USER_PSW = #{userPsw,jdbcType=VARCHAR},
+      </if>
+      <if test="userIcon != null" >
+        USER_ICON = #{userIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="userSex != null" >
+        USER_SEX = #{userSex,jdbcType=DECIMAL},
+      </if>
+      <if test="userPhone != null" >
+        USER_PHONE = #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="userSalt != null" >
+        USER_SALT = #{userSalt,jdbcType=VARCHAR},
+      </if>
+      <if test="userCreatetime != null" >
+        USER_CREATETIME = #{userCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userStatus != null" >
+        USER_STATUS = #{userStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="userRemark != null" >
+        USER_REMARK = #{userRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null" >
+        ROLE_ID = #{roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="teamId != null" >
+        TEAM_ID = #{teamId,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where USER_ID = #{userId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.seecen.customer.entity.User" >
+    update CON_USER
+    set USER_NAME = #{userName,jdbcType=VARCHAR},
+      USER_PSW = #{userPsw,jdbcType=VARCHAR},
+      USER_ICON = #{userIcon,jdbcType=VARCHAR},
+      USER_SEX = #{userSex,jdbcType=DECIMAL},
+      USER_PHONE = #{userPhone,jdbcType=VARCHAR},
+      USER_SALT = #{userSalt,jdbcType=VARCHAR},
+      USER_CREATETIME = #{userCreatetime,jdbcType=TIMESTAMP},
+      USER_STATUS = #{userStatus,jdbcType=DECIMAL},
+      USER_REMARK = #{userRemark,jdbcType=VARCHAR},
+      ROLE_ID = #{roleId,jdbcType=DECIMAL},
+      TEAM_ID = #{teamId,jdbcType=DECIMAL}
+    where USER_ID = #{userId,jdbcType=DECIMAL}
+  </update>
+</mapper>

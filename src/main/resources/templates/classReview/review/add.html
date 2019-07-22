@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="component/adminCommons::head(增加评审)"></head>
+<body>
+<div class="x-body layui-anim layui-anim-up">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label for="reviewProject" class="layui-form-label">
+                <span class="x-red">*</span>评审项目
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="reviewProject" name="reviewProject" required="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="reviewCase" class="layui-form-label">
+                <span class="x-red">*</span>评审情况
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="reviewCase" name="reviewCase" required="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="reviewGrade" class="layui-form-label">
+                <span class="x-red">*</span>评审成绩
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="reviewGrade" name="reviewGrade" required="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="x-red">*</span>学生编号
+            </label>
+            <div class="layui-input-inline">
+                <select name="customerId"  lay-filter="selectStu">
+                    <option>选择学生</option>
+                    <option th:each="stu:${list}" th:value="${stu.customerId}" th:text="${stu.customerName}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="x-red">*</span>班级编号
+            </label>
+            <div class="layui-input-inline">
+                <select name="teamId" id="cardRuleId">
+                    <option></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label  class="layui-form-label">
+            </label>
+            <button  class="layui-btn" lay-filter="add" lay-submit="">
+                增加
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form','layer'], function(){
+        $ = layui.jquery;
+        var form = layui.form
+            ,layer = layui.layer;
+
+        //监听提交
+        form.on('submit(add)', function(data){
+            console.log(data);
+            $.ajax({
+                url:"review/saveOrUpdate",
+                type:"post",
+                data:data.field,
+                dataType:"json",
+                success:function (r) {
+                    if(r==1){
+                        layer.alert("增加成功", {icon: 6},function () {
+                            parent.location.reload();
+                        });
+                    }else{
+                        layer.alert("增加失败", {icon: 3});
+                    }
+                }
+            })
+
+            return false;
+        });
+
+
+
+        form.on('select(selectStu)', function (data) {
+            //触发内容
+            console.log(data.value);
+           $.ajax({
+               url:"review/bindingTeam/"+data.value,
+               type:"post",
+               dataType:"json",
+               success:function (r) {
+                   if(r!=null){
+                           $("#cardRuleId").empty();//清空下拉框
+                               var item=r.teamId;
+                               $("#cardRuleId").append("<option th:value="+item.value+">"+item+"</option>");
+                       }else {
+                           $("#cardRuleId").empty();//清空下拉框
+                           $("#cardRuleId").append("<option value=''>--请新建规则--</option>");
+                       }
+                       form.render();//注意渲染页面表单，否则不显示数据
+
+               }
+           })
+        });
+
+    });
+</script>
+</body>
+
+</html>

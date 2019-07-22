@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.CustomerMapper" >
+  <resultMap id="BaseResultMap" type="com.seecen.customer.entity.Customer" >
+    <id column="CUSTOMER_ID" property="customerId" jdbcType="DECIMAL" />
+    <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_SEX" property="customerSex" jdbcType="DECIMAL" />
+    <result column="CUSTOMER_PHONE" property="customerPhone" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_IMG" property="customerImg" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_DATE" property="customerDate" jdbcType="TIMESTAMP" />
+    <result column="CUSTOMER_FLAG" property="customerFlag" jdbcType="DECIMAL" />
+    <result column="CHANNEL_ID" property="channelId" jdbcType="DECIMAL" />
+    <result column="CENTER_ID" property="centerId" jdbcType="DECIMAL" />
+    <result column="TEAM_ID" property="teamId" jdbcType="DECIMAL" />
+    <result column="CUSTOMER_REMARK" property="customerRemark" jdbcType="VARCHAR" />
+
+    <association property="channel" javaType="com.seecen.customer.entity.Channel" column="Id">
+      <id column="ID" property="id" jdbcType="DECIMAL" />
+      <result column="CEN_ID" property="cenId" jdbcType="DECIMAL" />
+      <result column="CHANNEL_NAME" property="channelName" jdbcType="VARCHAR" />
+      <result column="CHANNEL_FLAG" property="channelFlag" jdbcType="DECIMAL" />
+    </association>
+      <association property="center" javaType="com.seecen.customer.entity.Center" column="Id">
+        <id column="ID" property="id" jdbcType="DECIMAL" />
+        <result column="CENTER_NAME" property="centerName" jdbcType="VARCHAR" />
+        <result column="CENTER_ADDRESS" property="centerAddress" jdbcType="VARCHAR" />
+        <result column="CENTER_PHONE" property="centerPhone" jdbcType="VARCHAR" />
+        <result column="CENTER_FLAG" property="centerFlag" jdbcType="DECIMAL" />
+      </association>
+  </resultMap>
+    <!--分页遍历、客户-->
+  <select id="selectCustomer" resultMap="BaseResultMap" parameterType="com.seecen.customer.entity.Customer">
+    select * from (
+    select a.*,ce.CENTER_NAME from (
+    select cu.*,ch.CHANNEL_NAME from CON_CUSTOMER cu
+    left join CON_CHANNEL ch on cu.CHANNEL_ID=ch.ID where ch.CHANNEL_FLAG=1) a
+    left join CON_CENTER ce on a.CENTER_ID=ce.ID where ce.CENTER_FLAG=1 and a.CUSTOMER_FLAG=0) s where 1=1
+      <if test="start!=null">
+        and s.CUSTOMER_DATE &gt;=#{start}
+      </if>
+      <if test="end!=null">
+        and s.CUSTOMER_DATE &lt;=#{end}
+      </if>
+      <if test="channelId!=null">
+        and s.CHANNEL_ID =#{channelId}
+      </if>
+      <if test="centerId!=null">
+        and s.CENTER_ID=#{centerId}
+      </if>
+
+  </select>
+
+  <!--分页遍历、学生-->
+  <select id="selectCustomers" resultMap="BaseResultMap" parameterType="com.seecen.customer.entity.Customer">
+    select * from (
+    select a.*,ce.CENTER_NAME from (
+    select cu.*,ch.CHANNEL_NAME from CON_CUSTOMER cu
+    left join CON_CHANNEL ch on cu.CHANNEL_ID=ch.ID where ch.CHANNEL_FLAG=1) a
+    left join CON_CENTER ce on a.CENTER_ID=ce.ID where ce.CENTER_FLAG=1 and a.CUSTOMER_FLAG=1) s where 1=1
+    <if test="start!=null">
+      and s.CUSTOMER_DATE &gt;=#{start}
+    </if>
+    <if test="end!=null">
+      and s.CUSTOMER_DATE &lt;=#{end}
+    </if>
+    <if test="channelId!=null">
+      and s.CHANNEL_ID =#{channelId}
+    </if>
+    <if test="centerId!=null">
+      and s.CENTER_ID=#{centerId}
+    </if>
+  </select>
+
+    <!--名字模糊查询-->
+    <select id="selectCustomerName" resultMap="BaseResultMap" parameterType="com.seecen.customer.entity.Customer">
+        select * from (
+        select a.*,ce.CENTER_NAME from (
+        select cu.*,ch.CHANNEL_NAME from CON_CUSTOMER cu
+        left join CON_CHANNEL ch on cu.CHANNEL_ID=ch.ID) a
+        left join CON_CENTER ce on a.CENTER_ID=ce.ID) s where s.CUSTOMER_NAME=#{customerName}
+    </select>
+  <select id="selectFind" resultMap="BaseResultMap" >
+     select * from (
+        select a.*,ce.CENTER_NAME from (
+        select cu.*,ch.CHANNEL_NAME from CON_CUSTOMER cu
+        left join CON_CHANNEL ch on cu.CHANNEL_ID=ch.ID) a
+        left join CON_CENTER ce on a.CENTER_ID=ce.ID) s where s.CUSTOMER_ID=#{customerId}
+  </select>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_SEX, CUSTOMER_PHONE, CUSTOMER_IMG, CUSTOMER_DATE, 
+    CUSTOMER_FLAG, CHANNEL_ID, CENTER_ID, TEAM_ID, CUSTOMER_REMARK
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.seecen.customer.entity.CustomerExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from CON_CUSTOMER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from CON_CUSTOMER
+    where CUSTOMER_ID = #{customerId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from CON_CUSTOMER
+    where CUSTOMER_ID = #{customerId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.seecen.customer.entity.CustomerExample" >
+    delete from CON_CUSTOMER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.seecen.customer.entity.Customer" >
+    insert into CON_CUSTOMER (CUSTOMER_ID, CUSTOMER_NAME, CUSTOMER_SEX, 
+      CUSTOMER_PHONE, CUSTOMER_IMG, CUSTOMER_DATE, 
+      CUSTOMER_FLAG, CHANNEL_ID, CENTER_ID, 
+      TEAM_ID, CUSTOMER_REMARK)
+    values (SEQ_CON_CUSTOMER.nextval, #{customerName,jdbcType=VARCHAR}, #{customerSex,jdbcType=DECIMAL},
+      #{customerPhone,jdbcType=VARCHAR}, #{customerImg,jdbcType=VARCHAR}, #{customerDate,jdbcType=TIMESTAMP}, 
+      #{customerFlag,jdbcType=DECIMAL}, #{channelId,jdbcType=DECIMAL}, #{centerId,jdbcType=DECIMAL}, 
+      #{teamId,jdbcType=DECIMAL}, #{customerRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.seecen.customer.entity.Customer" >
+    insert into CON_CUSTOMER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="customerId != null" >
+        CUSTOMER_ID,
+      </if>
+      <if test="customerName != null" >
+        CUSTOMER_NAME,
+      </if>
+      <if test="customerSex != null" >
+        CUSTOMER_SEX,
+      </if>
+      <if test="customerPhone != null" >
+        CUSTOMER_PHONE,
+      </if>
+      <if test="customerImg != null" >
+        CUSTOMER_IMG,
+      </if>
+      <if test="customerDate != null" >
+        CUSTOMER_DATE,
+      </if>
+      <if test="customerFlag != null" >
+        CUSTOMER_FLAG,
+      </if>
+      <if test="channelId != null" >
+        CHANNEL_ID,
+      </if>
+      <if test="centerId != null" >
+        CENTER_ID,
+      </if>
+      <if test="teamId != null" >
+        TEAM_ID,
+      </if>
+      <if test="customerRemark != null" >
+        CUSTOMER_REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="customerId != null" >
+        #{customerId,jdbcType=DECIMAL},
+      </if>
+      <if test="customerName != null" >
+        #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerSex != null" >
+        #{customerSex,jdbcType=DECIMAL},
+      </if>
+      <if test="customerPhone != null" >
+        #{customerPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="customerImg != null" >
+        #{customerImg,jdbcType=VARCHAR},
+      </if>
+      <if test="customerDate != null" >
+        #{customerDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="customerFlag != null" >
+        #{customerFlag,jdbcType=DECIMAL},
+      </if>
+      <if test="channelId != null" >
+        #{channelId,jdbcType=DECIMAL},
+      </if>
+      <if test="centerId != null" >
+        #{centerId,jdbcType=DECIMAL},
+      </if>
+      <if test="teamId != null" >
+        #{teamId,jdbcType=DECIMAL},
+      </if>
+      <if test="customerRemark != null" >
+        #{customerRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.seecen.customer.entity.CustomerExample" resultType="java.lang.Integer" >
+    select count(*) from CON_CUSTOMER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update CON_CUSTOMER
+    <set >
+      <if test="record.customerId != null" >
+        CUSTOMER_ID = #{record.customerId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.customerName != null" >
+        CUSTOMER_NAME = #{record.customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.customerSex != null" >
+        CUSTOMER_SEX = #{record.customerSex,jdbcType=DECIMAL},
+      </if>
+      <if test="record.customerPhone != null" >
+        CUSTOMER_PHONE = #{record.customerPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.customerImg != null" >
+        CUSTOMER_IMG = #{record.customerImg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.customerDate != null" >
+        CUSTOMER_DATE = #{record.customerDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.customerFlag != null" >
+        CUSTOMER_FLAG = #{record.customerFlag,jdbcType=DECIMAL},
+      </if>
+      <if test="record.channelId != null" >
+        CHANNEL_ID = #{record.channelId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.centerId != null" >
+        CENTER_ID = #{record.centerId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.teamId != null" >
+        TEAM_ID = #{record.teamId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.customerRemark != null" >
+        CUSTOMER_REMARK = #{record.customerRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update CON_CUSTOMER
+    set CUSTOMER_ID = #{record.customerId,jdbcType=DECIMAL},
+      CUSTOMER_NAME = #{record.customerName,jdbcType=VARCHAR},
+      CUSTOMER_SEX = #{record.customerSex,jdbcType=DECIMAL},
+      CUSTOMER_PHONE = #{record.customerPhone,jdbcType=VARCHAR},
+      CUSTOMER_IMG = #{record.customerImg,jdbcType=VARCHAR},
+      CUSTOMER_DATE = #{record.customerDate,jdbcType=TIMESTAMP},
+      CUSTOMER_FLAG = #{record.customerFlag,jdbcType=DECIMAL},
+      CHANNEL_ID = #{record.channelId,jdbcType=DECIMAL},
+      CENTER_ID = #{record.centerId,jdbcType=DECIMAL},
+      TEAM_ID = #{record.teamId,jdbcType=DECIMAL},
+      CUSTOMER_REMARK = #{record.customerRemark,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.seecen.customer.entity.Customer" >
+    update CON_CUSTOMER
+    <set >
+      <if test="customerName != null" >
+        CUSTOMER_NAME = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerSex != null" >
+        CUSTOMER_SEX = #{customerSex,jdbcType=DECIMAL},
+      </if>
+      <if test="customerPhone != null" >
+        CUSTOMER_PHONE = #{customerPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="customerImg != null" >
+        CUSTOMER_IMG = #{customerImg,jdbcType=VARCHAR},
+      </if>
+      <if test="customerDate != null" >
+        CUSTOMER_DATE = #{customerDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="customerFlag != null" >
+        CUSTOMER_FLAG = #{customerFlag,jdbcType=DECIMAL},
+      </if>
+      <if test="channelId != null" >
+        CHANNEL_ID = #{channelId,jdbcType=DECIMAL},
+      </if>
+      <if test="centerId != null" >
+        CENTER_ID = #{centerId,jdbcType=DECIMAL},
+      </if>
+      <if test="teamId != null" >
+        TEAM_ID = #{teamId,jdbcType=DECIMAL},
+      </if>
+      <if test="customerRemark != null" >
+        CUSTOMER_REMARK = #{customerRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CUSTOMER_ID = #{customerId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.seecen.customer.entity.Customer" >
+    update CON_CUSTOMER
+    set CUSTOMER_NAME = #{customerName,jdbcType=VARCHAR},
+      CUSTOMER_SEX = #{customerSex,jdbcType=DECIMAL},
+      CUSTOMER_PHONE = #{customerPhone,jdbcType=VARCHAR},
+      CUSTOMER_IMG = #{customerImg,jdbcType=VARCHAR},
+      CUSTOMER_DATE = #{customerDate,jdbcType=TIMESTAMP},
+      CUSTOMER_FLAG = #{customerFlag,jdbcType=DECIMAL},
+      CHANNEL_ID = #{channelId,jdbcType=DECIMAL},
+      CENTER_ID = #{centerId,jdbcType=DECIMAL},
+      TEAM_ID = #{teamId,jdbcType=DECIMAL},
+      CUSTOMER_REMARK = #{customerRemark,jdbcType=VARCHAR}
+    where CUSTOMER_ID = #{customerId,jdbcType=DECIMAL}
+  </update>
+</mapper>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="component/commons::head('某某某系统')"></head>
+
+<body>
+<div class="x-body">
+    <form class="layui-form" th:object="${center}">
+        <input type="hidden" name="id" th:value="*{id}">
+        <div class="layui-form-item">
+            <label for="centerName" class="layui-form-label">
+                <span class="x-red">*</span>名字
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="centerName" name="centerName" required="" lay-verify="required"
+                       autocomplete="off" th:value="*{centerName}" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red">*</span>将会成为您唯一的标识名
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="centerAddress" class="layui-form-label">
+                <span class="x-red">*</span>公司地址
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="centerAddress" name="centerAddress" required="" lay-verify="required"
+                       autocomplete="off" class="layui-input" th:value="*{centerAddress}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="centerPhone" class="layui-form-label">
+                <span class="x-red">*</span>公司电话
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="centerPhone" name="centerPhone" required="" lay-verify="required"
+                       autocomplete="off" class="layui-input" th:value="*{centerPhone}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span class="x-red">*</span>是否启用</label>
+            <div class="layui-input-block" th:if="*{centerFlag==1}">
+                <input type="radio" name="centerFlag" lay-skin="primary"  th:value="1" title="启用" checked="">
+                <input type="radio" name="centerFlag" lay-skin="primary" th:value="2" title="禁用">
+            </div>
+            <div class="layui-input-block" th:if="*{centerFlag==2}">
+                <input type="radio" name="centerFlag" lay-skin="primary"  th:value="1" title="启用">
+                <input type="radio" name="centerFlag" lay-skin="primary" th:value="2" title="禁用" checked="">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="centerName" class="layui-form-label">
+            </label>
+            <button class="layui-btn" lay-filter="update" lay-submit="">
+                修改
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#time' //指定元素
+        });
+
+    });
+    layui.use(['form', 'layer'], function () {
+        $ = layui.jquery;
+        var form = layui.form
+            , layer = layui.layer;
+
+        //自定义验证规则
+        form.verify({
+            nikename: function (value) {
+                if (value.length < 5) {
+                    return '昵称至少得5个字符啊';
+                }
+            }
+            , pass: [/(.+){6,12}$/, '密码必须6到12位']
+            , repass: function (value) {
+                if ($('#L_pass').val() != $('#L_repass').val()) {
+                    return '两次密码不一致';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(update)', function (data) {
+            console.log(data);
+            //发异步，把数据提交给php
+            $.ajax({
+                url:"/center/update",
+                type:"post",
+                data:data.field,
+                dataType:"json",
+                success:function (e) {
+                    layer.alert("修改成功", {icon: 6}, function () {
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前frame
+                        parent.layer.close(index);
+                        parent.location.reload();
+                    });
+                }
+            })
+            return false;
+        });
+
+
+    });
+</script>
+</body>
+
+</html>

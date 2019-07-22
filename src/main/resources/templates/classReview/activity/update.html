@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="component/adminCommons::head(修改活动)"></head>
+<body>
+<div class="x-body layui-anim layui-anim-up">
+    <form class="layui-form">
+        <input type="hidden" name="actId" th:value="${activity.actId}">
+        <div class="layui-form-item">
+            <label for="actName" class="layui-form-label">
+                <span class="x-red">*</span>活动名
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="actName" name="actName" th:value="${activity.getActName()}"
+                       required="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="actDate" class="layui-form-label">
+                <span class="x-red">*</span>活动时间
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="actDate" name="actDate" th:value="${#dates.format(activity.getActDate(),'yyyy-MM-dd')}"
+                       required="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label  class="layui-form-label">
+                <span class="x-red">*</span>活动内容
+            </label>
+            <div class="layui-input-inline">
+                <textarea name="actContent" placeholder="请输入内容"  th:text="${activity.getActContent()}" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label  class="layui-form-label">
+                <span class="x-red">*</span>选择班级
+            </label>
+            <div class="layui-input-inline">
+                <select name="teamId" lay-verify="">
+                    <option th:each="team:${list}" th:value="${team.teamId}" th:text="${team.teamName}"
+                    th:selected="${activity.teamId==team.teamId}"
+                    ></option>
+                    <option value="x" disabled>重修班</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label  class="layui-form-label">
+            </label>
+            <button  class="layui-btn" lay-filter="update" lay-submit="">
+                修改
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#actDate' //指定元素
+        });
+
+    });
+
+
+
+    layui.use(['form','layer'], function(){
+        $ = layui.jquery;
+        var form = layui.form
+            ,layer = layui.layer;
+
+        //自定义验证规则
+        form.verify({
+            username: function(value){
+                if(value.length < 3){
+                    return '昵称至少得5个字符啊';
+                }
+            }
+            ,pass: [/(.+){6,12}$/, '密码必须6到12位']
+            ,repass: function(value){
+                if($('#L_pass').val()!=$('#L_repass').val()){
+                    return '两次密码不一致';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(update)', function(data){
+            console.log(data);
+            $.ajax({
+                url:"/activity/saveOrUpdate",
+                type:"post",
+                data:data.field,
+                dataType:"json",
+                success:function (r) {
+                    if(r==1){
+                        layer.alert("修改成功", {icon: 6},function () {
+                            parent.location.reload();
+                        });
+                    }else{
+                        layer.alert("修改失败", {icon: 3});
+                    }
+                }
+            })
+
+            return false;
+        });
+
+
+    });
+</script>
+</body>
+
+</html>

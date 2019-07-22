@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="component/adminCommons::head(修改页面)"></head>
+<body>
+<div class="x-body layui-anim layui-anim-up">
+    <form class="layui-form">
+        <input type="hidden" name="teamId" th:value="${team.getTeamId()}">
+        <div class="layui-form-item">
+            <label for="teamName" class="layui-form-label">
+                <span class="x-red">*</span>班级名
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="teamName" name="teamName"  th:value="${team.getTeamName()}"
+                       required="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="teamInt" class="layui-form-label">
+                <span class="x-red">*</span>班级简介
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="teamInt" name="teamIntroduce" th:value="${team.getTeamIntroduce()}"
+                       required="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label  class="layui-form-label">
+                <span class="x-red">*</span>班级状态
+            </label>
+            <div class="layui-input-inline">
+                <select name="teamFlag" lay-verify="">
+                    <option value="-1" >选择进度</option>
+                    <option value="0" th:selected="${team.getTeamFlag()==0}" >开新班</option>
+                    <option value="1" th:selected="${team.getTeamFlag()==1}" >就业班</option>
+                    <option value="2" disabled>重修班</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label  class="layui-form-label">
+            </label>
+            <button  class="layui-btn" lay-filter="update" lay-submit="">
+                修改
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form','layer'], function(){
+        $ = layui.jquery;
+        var form = layui.form
+            ,layer = layui.layer;
+
+        //自定义验证规则
+        form.verify({
+            username: function(value){
+                if(value.length < 3){
+                    return '昵称至少得5个字符啊';
+                }
+            }
+            ,pass: [/(.+){6,12}$/, '密码必须6到12位']
+            ,repass: function(value){
+                if($('#L_pass').val()!=$('#L_repass').val()){
+                    return '两次密码不一致';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(update)', function(data){
+            console.log(data);
+            $.ajax({
+                url:"team/saveOrUpdate",
+                type:"post",
+                data:data.field,
+                dataType:"json",
+                success:function (r) {
+                    if(r==1){
+                        layer.alert("修改成功", {icon: 6},function () {
+                            parent.location.reload();
+                        });
+                    }else{
+                        layer.alert("修改失败", {icon: 3});
+                    }
+                }
+            })
+
+            return false;
+        });
+
+
+    });
+</script>
+</body>
+
+</html>

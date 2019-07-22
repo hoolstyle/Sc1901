@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.TeamMapper" >
+  <resultMap id="BaseResultMap" type="com.seecen.customer.entity.Team" >
+    <id column="TEAM_ID" property="teamId" jdbcType="DECIMAL" />
+    <result column="TEAM_NAME" property="teamName" jdbcType="VARCHAR" />
+    <result column="TEAM_INTRODUCE" property="teamIntroduce" jdbcType="VARCHAR" />
+    <result column="TEAM_REMARK" property="teamRemark" jdbcType="VARCHAR" />
+    <result column="TEAM_DATE" property="teamDate" jdbcType="TIMESTAMP" />
+    <result column="TEAM_FLAG" property="teamFlag" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    TEAM_ID, TEAM_NAME, TEAM_INTRODUCE, TEAM_REMARK, TEAM_DATE, TEAM_FLAG
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.seecen.customer.entity.TeamExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from CON_TEAM
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from CON_TEAM
+    where TEAM_ID = #{teamId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from CON_TEAM
+    where TEAM_ID = #{teamId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.seecen.customer.entity.TeamExample" >
+    delete from CON_TEAM
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.seecen.customer.entity.Team" >
+    insert into CON_TEAM (TEAM_ID, TEAM_NAME, TEAM_INTRODUCE, 
+      TEAM_REMARK, TEAM_DATE, TEAM_FLAG
+      )
+    values (#{teamId,jdbcType=DECIMAL}, #{teamName,jdbcType=VARCHAR}, #{teamIntroduce,jdbcType=VARCHAR}, 
+      #{teamRemark,jdbcType=VARCHAR}, #{teamDate,jdbcType=TIMESTAMP}, #{teamFlag,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.seecen.customer.entity.Team" >
+    insert into CON_TEAM
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        TEAM_ID,
+      <if test="teamName != null" >
+        TEAM_NAME,
+      </if>
+      <if test="teamIntroduce != null" >
+        TEAM_INTRODUCE,
+      </if>
+      <if test="teamRemark != null" >
+        TEAM_REMARK,
+      </if>
+      <if test="teamDate != null" >
+        TEAM_DATE,
+      </if>
+      <if test="teamFlag != null" >
+        TEAM_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+       seq_con_team.nextval,
+      <if test="teamName != null" >
+        #{teamName,jdbcType=VARCHAR},
+      </if>
+      <if test="teamIntroduce != null" >
+        #{teamIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="teamRemark != null" >
+        #{teamRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="teamDate != null" >
+        #{teamDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="teamFlag != null" >
+        #{teamFlag,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.seecen.customer.entity.TeamExample" resultType="java.lang.Integer" >
+    select count(*) from CON_TEAM
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update CON_TEAM
+    <set >
+      <if test="record.teamId != null" >
+        TEAM_ID = #{record.teamId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.teamName != null" >
+        TEAM_NAME = #{record.teamName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teamIntroduce != null" >
+        TEAM_INTRODUCE = #{record.teamIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teamRemark != null" >
+        TEAM_REMARK = #{record.teamRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teamDate != null" >
+        TEAM_DATE = #{record.teamDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.teamFlag != null" >
+        TEAM_FLAG = #{record.teamFlag,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update CON_TEAM
+    set TEAM_ID = #{record.teamId,jdbcType=DECIMAL},
+      TEAM_NAME = #{record.teamName,jdbcType=VARCHAR},
+      TEAM_INTRODUCE = #{record.teamIntroduce,jdbcType=VARCHAR},
+      TEAM_REMARK = #{record.teamRemark,jdbcType=VARCHAR},
+      TEAM_DATE = #{record.teamDate,jdbcType=TIMESTAMP},
+      TEAM_FLAG = #{record.teamFlag,jdbcType=DECIMAL}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.seecen.customer.entity.Team" >
+    update CON_TEAM
+    <set >
+      <if test="teamName != null" >
+        TEAM_NAME = #{teamName,jdbcType=VARCHAR},
+      </if>
+      <if test="teamIntroduce != null" >
+        TEAM_INTRODUCE = #{teamIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="teamRemark != null" >
+        TEAM_REMARK = #{teamRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="teamDate != null" >
+        TEAM_DATE = #{teamDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="teamFlag != null" >
+        TEAM_FLAG = #{teamFlag,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where TEAM_ID = #{teamId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.seecen.customer.entity.Team" >
+    update CON_TEAM
+    set TEAM_NAME = #{teamName,jdbcType=VARCHAR},
+      TEAM_INTRODUCE = #{teamIntroduce,jdbcType=VARCHAR},
+      TEAM_REMARK = #{teamRemark,jdbcType=VARCHAR},
+      TEAM_DATE = #{teamDate,jdbcType=TIMESTAMP},
+      TEAM_FLAG = #{teamFlag,jdbcType=DECIMAL}
+    where TEAM_ID = #{teamId,jdbcType=DECIMAL}
+  </update>
+</mapper>

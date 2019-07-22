@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.ActivityMapper" >
+  <resultMap id="BaseResultMap" type="com.seecen.customer.entity.Activity" >
+    <id column="ACT_ID" property="actId" jdbcType="DECIMAL" />
+    <result column="ACT_NAME" property="actName" jdbcType="VARCHAR" />
+    <result column="ACT_DATE" property="actDate" jdbcType="TIMESTAMP" />
+    <result column="ACT_CONTENT" property="actContent" jdbcType="VARCHAR" />
+    <result column="ACT_REMARK" property="actRemark" jdbcType="VARCHAR" />
+    <result column="TEAM_ID" property="teamId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ACT_ID, ACT_NAME, ACT_DATE, ACT_CONTENT, ACT_REMARK, TEAM_ID
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.seecen.customer.entity.ActivityExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from CON_ACTIVITY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from CON_ACTIVITY
+    where ACT_ID = #{actId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from CON_ACTIVITY
+    where ACT_ID = #{actId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.seecen.customer.entity.ActivityExample" >
+    delete from CON_ACTIVITY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.seecen.customer.entity.Activity" >
+    insert into CON_ACTIVITY (ACT_ID, ACT_NAME, ACT_DATE, 
+      ACT_CONTENT, ACT_REMARK, TEAM_ID
+      )
+    values (#{actId,jdbcType=DECIMAL}, #{actName,jdbcType=VARCHAR}, #{actDate,jdbcType=TIMESTAMP}, 
+      #{actContent,jdbcType=VARCHAR}, #{actRemark,jdbcType=VARCHAR}, #{teamId,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.seecen.customer.entity.Activity" >
+    insert into CON_ACTIVITY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        ACT_ID,
+      <if test="actName != null" >
+        ACT_NAME,
+      </if>
+      <if test="actDate != null" >
+        ACT_DATE,
+      </if>
+      <if test="actContent != null" >
+        ACT_CONTENT,
+      </if>
+      <if test="actRemark != null" >
+        ACT_REMARK,
+      </if>
+      <if test="teamId != null" >
+        TEAM_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+        SEQ_CON_ACTIVITY.NEXTVAL,
+      <if test="actName != null" >
+        #{actName,jdbcType=VARCHAR},
+      </if>
+      <if test="actDate != null" >
+        #{actDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actContent != null" >
+        #{actContent,jdbcType=VARCHAR},
+      </if>
+      <if test="actRemark != null" >
+        #{actRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="teamId != null" >
+        #{teamId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.seecen.customer.entity.ActivityExample" resultType="java.lang.Integer" >
+    select count(*) from CON_ACTIVITY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update CON_ACTIVITY
+    <set >
+      <if test="record.actId != null" >
+        ACT_ID = #{record.actId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.actName != null" >
+        ACT_NAME = #{record.actName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.actDate != null" >
+        ACT_DATE = #{record.actDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.actContent != null" >
+        ACT_CONTENT = #{record.actContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.actRemark != null" >
+        ACT_REMARK = #{record.actRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teamId != null" >
+        TEAM_ID = #{record.teamId,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update CON_ACTIVITY
+    set ACT_ID = #{record.actId,jdbcType=DECIMAL},
+      ACT_NAME = #{record.actName,jdbcType=VARCHAR},
+      ACT_DATE = #{record.actDate,jdbcType=TIMESTAMP},
+      ACT_CONTENT = #{record.actContent,jdbcType=VARCHAR},
+      ACT_REMARK = #{record.actRemark,jdbcType=VARCHAR},
+      TEAM_ID = #{record.teamId,jdbcType=DECIMAL}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.seecen.customer.entity.Activity" >
+    update CON_ACTIVITY
+    <set >
+      <if test="actName != null" >
+        ACT_NAME = #{actName,jdbcType=VARCHAR},
+      </if>
+      <if test="actDate != null" >
+        ACT_DATE = #{actDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actContent != null" >
+        ACT_CONTENT = #{actContent,jdbcType=VARCHAR},
+      </if>
+      <if test="actRemark != null" >
+        ACT_REMARK = #{actRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="teamId != null" >
+        TEAM_ID = #{teamId,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ACT_ID = #{actId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.seecen.customer.entity.Activity" >
+    update CON_ACTIVITY
+    set ACT_NAME = #{actName,jdbcType=VARCHAR},
+      ACT_DATE = #{actDate,jdbcType=TIMESTAMP},
+      ACT_CONTENT = #{actContent,jdbcType=VARCHAR},
+      ACT_REMARK = #{actRemark,jdbcType=VARCHAR},
+      TEAM_ID = #{teamId,jdbcType=DECIMAL}
+    where ACT_ID = #{actId,jdbcType=DECIMAL}
+  </update>
+</mapper>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.EntryMapper" >
+  <resultMap id="BaseResultMap" type="com.seecen.customer.entity.Entry" >
+    <id column="ENTRY_ID" property="entryId" jdbcType="DECIMAL" />
+    <result column="ENTRY_NAME" property="entryName" jdbcType="VARCHAR" />
+    <result column="TEAM_ID" property="teamId" jdbcType="DECIMAL" />
+    <result column="ENTRY_STATUS" property="entryStatus" jdbcType="DECIMAL" />
+    <result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL" />
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ENTRY_ID, ENTRY_NAME, TEAM_ID, ENTRY_STATUS, COMPANY_ID, USER_ID, REMARK
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.seecen.customer.entity.EntryExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from CON_ENTRY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from CON_ENTRY
+    where ENTRY_ID = #{entryId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from CON_ENTRY
+    where ENTRY_ID = #{entryId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.seecen.customer.entity.EntryExample" >
+    delete from CON_ENTRY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.seecen.customer.entity.Entry" >
+    insert into CON_ENTRY (ENTRY_ID, ENTRY_NAME, TEAM_ID, 
+      ENTRY_STATUS, COMPANY_ID, USER_ID, 
+      REMARK)
+    values (SEQ_CON_ENTRY.nextval, #{entryName,jdbcType=VARCHAR}, #{teamId,jdbcType=DECIMAL},
+      #{entryStatus,jdbcType=DECIMAL}, #{companyId,jdbcType=DECIMAL}, #{userId,jdbcType=DECIMAL}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.seecen.customer.entity.Entry" >
+    insert into CON_ENTRY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="entryId != null" >
+        ENTRY_ID,
+      </if>
+      <if test="entryName != null" >
+        ENTRY_NAME,
+      </if>
+      <if test="teamId != null" >
+        TEAM_ID,
+      </if>
+      <if test="entryStatus != null" >
+        ENTRY_STATUS,
+      </if>
+      <if test="companyId != null" >
+        COMPANY_ID,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="entryId != null" >
+        #{entryId,jdbcType=DECIMAL},
+      </if>
+      <if test="entryName != null" >
+        #{entryName,jdbcType=VARCHAR},
+      </if>
+      <if test="teamId != null" >
+        #{teamId,jdbcType=DECIMAL},
+      </if>
+      <if test="entryStatus != null" >
+        #{entryStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=DECIMAL},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.seecen.customer.entity.EntryExample" resultType="java.lang.Integer" >
+    select count(*) from CON_ENTRY
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update CON_ENTRY
+    <set >
+      <if test="record.entryId != null" >
+        ENTRY_ID = #{record.entryId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.entryName != null" >
+        ENTRY_NAME = #{record.entryName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teamId != null" >
+        TEAM_ID = #{record.teamId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.entryStatus != null" >
+        ENTRY_STATUS = #{record.entryStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="record.companyId != null" >
+        COMPANY_ID = #{record.companyId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.userId != null" >
+        USER_ID = #{record.userId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update CON_ENTRY
+    set ENTRY_ID = #{record.entryId,jdbcType=DECIMAL},
+      ENTRY_NAME = #{record.entryName,jdbcType=VARCHAR},
+      TEAM_ID = #{record.teamId,jdbcType=DECIMAL},
+      ENTRY_STATUS = #{record.entryStatus,jdbcType=DECIMAL},
+      COMPANY_ID = #{record.companyId,jdbcType=DECIMAL},
+      USER_ID = #{record.userId,jdbcType=DECIMAL},
+      REMARK = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.seecen.customer.entity.Entry" >
+    update CON_ENTRY
+    <set >
+      <if test="entryName != null" >
+        ENTRY_NAME = #{entryName,jdbcType=VARCHAR},
+      </if>
+      <if test="teamId != null" >
+        TEAM_ID = #{teamId,jdbcType=DECIMAL},
+      </if>
+      <if test="entryStatus != null" >
+        ENTRY_STATUS = #{entryStatus,jdbcType=DECIMAL},
+      </if>
+      <if test="companyId != null" >
+        COMPANY_ID = #{companyId,jdbcType=DECIMAL},
+      </if>
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ENTRY_ID = #{entryId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.seecen.customer.entity.Entry" >
+    update CON_ENTRY
+    set ENTRY_NAME = #{entryName,jdbcType=VARCHAR},
+      TEAM_ID = #{teamId,jdbcType=DECIMAL},
+      ENTRY_STATUS = #{entryStatus,jdbcType=DECIMAL},
+      COMPANY_ID = #{companyId,jdbcType=DECIMAL},
+      USER_ID = #{userId,jdbcType=DECIMAL},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where ENTRY_ID = #{entryId,jdbcType=DECIMAL}
+  </update>
+</mapper>

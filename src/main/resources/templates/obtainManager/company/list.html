@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="component/commons::head('列表页面')"> </head>
+
+  <body>
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">演示</a>
+        <a>
+          <cite>导航元素</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+      <div class="layui-row">
+        <form class="layui-form layui-col-md12 x-so" th:action="@{/company/list}">
+          <input type="hidden" name="pageNum">
+          <input type="text" name="comName" th:value="${comName}" placeholder="请输入公司名" autocomplete="off" class="layui-input">
+          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+        </form>
+      </div>
+      <xblock>
+        <button class="layui-btn" th:onclick="|x_admin_show('添加用户','/company/add')|"><i class="layui-icon"></i>添加</button>
+        <span class="x-right" style="line-height:40px" th:text="'共有数据：'+${info.total}+'条'">共有数据：${} 条</span>
+      </xblock>
+
+
+      <table class="layui-table">
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>公司ID</th>
+            <th>公司名称</th>
+            <th>公司地址</th>
+            <th>公司电话</th>
+            <th>操作</th>
+        </thead>
+        <tbody>
+          <tr th:each="com,S:${info.list}">
+            <td th:text="${S.count}">2</td>
+            <td th:text="${com.comId}">23</td>
+            <td th:text="${com.comName}">admin</td>
+            <td th:text="${com.comAddress}">admin</td>
+            <td th:text="${com.comTel}">adm1in</td>
+            <td class="td-manage">
+              <a title="编辑"  th:onclick="|x_admin_show('编辑','/company/update/${com.comId}')|" href="javascript:;">
+                <i class="layui-icon">&#xe642;</i>
+              </a>
+              <a title="删除" th:onclick="|member_del(this,${com.comId})|" href="javascript:;">
+                <i class="layui-icon">&#xe640;</i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="page" th:include="component/adminCommons::page"></div>
+
+    </div>
+    <script>
+      layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#start' //指定元素
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#end' //指定元素
+        });
+      });
+
+       /*用户-停用*/
+      function member_stop(obj,id){
+          layer.confirm('确认要停用吗？',function(index){
+
+              if($(obj).attr('title')=='启用'){
+
+                //发异步把用户状态进行更改
+                $(obj).attr('title','停用')
+                $(obj).find('i').html('&#xe62f;');
+
+                $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
+                layer.msg('已停用!',{icon: 5,time:1000});
+
+              }else{
+                $(obj).attr('title','启用')
+                $(obj).find('i').html('&#xe601;');
+
+                $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
+                layer.msg('已启用!',{icon: 5,time:1000});
+              }
+              
+          });
+      }
+
+      /*用户-删除*/
+      function member_del(obj,id){
+          layer.confirm('确认要删除吗？',function(index){
+              $.ajax({
+                  url: "/company/del/"+id,
+                  data:{},
+                  type:"get",
+                  dataType:"json",
+                  success:function (r) {
+                      if(r==1){
+                          $(obj).parents("tr").remove();
+                          layer.msg('已删除!',{icon:1,time:1000});
+                      }else {
+                          layer.msg('删除失败!',{icon:5,time:1000});
+                      }
+                  }
+              })
+              /*//发异步删除数据
+              $(obj).parents("tr").remove();
+              layer.msg('已删除!',{icon:1,time:1000});*/
+          });
+      }
+
+
+
+      function delAll (argument) {
+
+        var data = tableCheck.getData();
+  
+        layer.confirm('确认要删除吗？'+data,function(index){
+            //捉到所有被选中的，发异步进行删除
+            layer.msg('删除成功', {icon: 1});
+            $(".layui-form-checked").not('.header').parents('tr').remove();
+        });
+      }
+    </script>
+  </body>
+
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="component/adminCommons::head('列表页面')"> </head>
+    <body>
+    <div class="x-body layui-anim layui-anim-up">
+        <blockquote class="layui-elem-quote">欢迎管理员：
+            <span class="x-red" th:text="${session.user.userName}">test</span>！
+            <a th:text="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')}">当前时间:2018-04-25 20:50:53</a></blockquote>
+
+        <fieldset class="layui-elem-field">
+            <legend>系统通知</legend>
+            <div class="layui-field-box">
+                <table class="layui-table" lay-skin="line" th:each="notice,S:${list}">
+                    <tbody >
+                        <tr>
+                            <td >
+                                标题：<a class="x-a" href="/" target="_blank"
+                                th:text="${notice.nTitle}">新版x-admin 2.0上线了</a>&nbsp;&nbsp;
+                                时间：<a class="x-a" href="/" target="_blank"
+                                   th:text="${#dates.format(notice.nCreatetime,'yyyy-MM-dd HH:mm:ss')}">时间</a>
+                                发布人：<a class="x-a" href="/" target="_blank"
+                                       th:text="${notice.promulgator}">某某</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td >
+                                内容：<a class="x-a" href="/" target="_blank"
+                                th:text="${notice.nContent}">公告</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+
+        <fieldset class="layui-elem-field">
+            <legend>开发团队</legend>
+            <div class="layui-field-box">
+                <table class="layui-table">
+                    <tbody>
+                        <tr>
+                            <th>版权所有</th>
+                            <td>思诚宝宝
+                                <a href="http://www.xxx.com/" class='x-a' target="_blank">访问官网</a></td>
+                        </tr>
+                        <tr>
+                            <th>开发者</th>
+                            <td>思诚宝宝</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+        <blockquote class="layui-elem-quote layui-quote-nm">感谢layui,百度Echarts,jquery,本系统由x-admin提供技术支持。</blockquote>
+    </div>
+    </body>
+</html>

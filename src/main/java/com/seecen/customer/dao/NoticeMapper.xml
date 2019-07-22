@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.NoticeMapper" >
+  <resultMap id="BaseResultMap" type="com.seecen.customer.entity.Notice" >
+    <id column="N_ID" property="nId" jdbcType="DECIMAL" />
+    <result column="N_TITLE" property="nTitle" jdbcType="VARCHAR" />
+    <result column="N_CONTENT" property="nContent" jdbcType="VARCHAR" />
+    <result column="N_CREATETIME" property="nCreatetime" jdbcType="TIMESTAMP" />
+    <result column="PROMULGATOR" property="promulgator" jdbcType="VARCHAR" />
+    <result column="PAGEVIEW" property="pageview" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    N_ID, N_TITLE, N_CONTENT, N_CREATETIME, PROMULGATOR, PAGEVIEW, REMARK
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.seecen.customer.entity.NoticeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from CON_NOTICE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from CON_NOTICE
+    where N_ID = #{nId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from CON_NOTICE
+    where N_ID = #{nId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.seecen.customer.entity.NoticeExample" >
+    delete from CON_NOTICE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.seecen.customer.entity.Notice" >
+    insert into CON_NOTICE (N_ID, N_TITLE, N_CONTENT, 
+      N_CREATETIME, PROMULGATOR, PAGEVIEW, 
+      REMARK)
+    values (#{nId,jdbcType=DECIMAL}, #{nTitle,jdbcType=VARCHAR}, #{nContent,jdbcType=VARCHAR}, 
+      #{nCreatetime,jdbcType=TIMESTAMP}, #{promulgator,jdbcType=VARCHAR}, #{pageview,jdbcType=DECIMAL}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.seecen.customer.entity.Notice" >
+    insert into CON_NOTICE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        N_ID,
+      <if test="nTitle != null" >
+        N_TITLE,
+      </if>
+      <if test="nContent != null" >
+        N_CONTENT,
+      </if>
+      <if test="nCreatetime != null" >
+        N_CREATETIME,
+      </if>
+      <if test="promulgator != null" >
+        PROMULGATOR,
+      </if>
+      <if test="pageview != null" >
+        PAGEVIEW,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      SEQ_CON_NOTICE.nextval,
+      <if test="nTitle != null" >
+        #{nTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="nContent != null" >
+        #{nContent,jdbcType=VARCHAR},
+      </if>
+      <if test="nCreatetime != null" >
+        #{nCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="promulgator != null" >
+        #{promulgator,jdbcType=VARCHAR},
+      </if>
+      <if test="pageview != null" >
+        #{pageview,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.seecen.customer.entity.NoticeExample" resultType="java.lang.Integer" >
+    select count(*) from CON_NOTICE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update CON_NOTICE
+    <set >
+      <if test="record.nId != null" >
+        N_ID = #{record.nId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.nTitle != null" >
+        N_TITLE = #{record.nTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nContent != null" >
+        N_CONTENT = #{record.nContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nCreatetime != null" >
+        N_CREATETIME = #{record.nCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.promulgator != null" >
+        PROMULGATOR = #{record.promulgator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pageview != null" >
+        PAGEVIEW = #{record.pageview,jdbcType=DECIMAL},
+      </if>
+      <if test="record.remark != null" >
+        REMARK = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update CON_NOTICE
+    set N_ID = #{record.nId,jdbcType=DECIMAL},
+      N_TITLE = #{record.nTitle,jdbcType=VARCHAR},
+      N_CONTENT = #{record.nContent,jdbcType=VARCHAR},
+      N_CREATETIME = #{record.nCreatetime,jdbcType=TIMESTAMP},
+      PROMULGATOR = #{record.promulgator,jdbcType=VARCHAR},
+      PAGEVIEW = #{record.pageview,jdbcType=DECIMAL},
+      REMARK = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.seecen.customer.entity.Notice" >
+    update CON_NOTICE
+    <set >
+      <if test="nTitle != null" >
+        N_TITLE = #{nTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="nContent != null" >
+        N_CONTENT = #{nContent,jdbcType=VARCHAR},
+      </if>
+      <if test="nCreatetime != null" >
+        N_CREATETIME = #{nCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="promulgator != null" >
+        PROMULGATOR = #{promulgator,jdbcType=VARCHAR},
+      </if>
+      <if test="pageview != null" >
+        PAGEVIEW = #{pageview,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where N_ID = #{nId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.seecen.customer.entity.Notice" >
+    update CON_NOTICE
+    set N_TITLE = #{nTitle,jdbcType=VARCHAR},
+      N_CONTENT = #{nContent,jdbcType=VARCHAR},
+      N_CREATETIME = #{nCreatetime,jdbcType=TIMESTAMP},
+      PROMULGATOR = #{promulgator,jdbcType=VARCHAR},
+      PAGEVIEW = #{pageview,jdbcType=DECIMAL},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where N_ID = #{nId,jdbcType=DECIMAL}
+  </update>
+</mapper>

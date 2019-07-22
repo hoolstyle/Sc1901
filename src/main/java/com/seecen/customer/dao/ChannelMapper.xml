@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.ChannelMapper" >
+  <resultMap id="BaseResultMap" type="com.seecen.customer.entity.Channel" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="CEN_ID" property="cenId" jdbcType="DECIMAL" />
+    <result column="CHANNEL_NAME" property="channelName" jdbcType="VARCHAR" />
+    <result column="CHANNEL_FLAG" property="channelFlag" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, CEN_ID, CHANNEL_NAME, CHANNEL_FLAG
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.seecen.customer.entity.ChannelExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from CON_CHANNEL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from CON_CHANNEL
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from CON_CHANNEL
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.seecen.customer.entity.ChannelExample" >
+    delete from CON_CHANNEL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.seecen.customer.entity.Channel" >
+    insert into CON_CHANNEL (ID, CEN_ID, CHANNEL_NAME, 
+      CHANNEL_FLAG)
+    values (SEQ_CON_CHANNEL.nextval, #{cenId,jdbcType=DECIMAL}, #{channelName,jdbcType=VARCHAR},
+      #{channelFlag,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.seecen.customer.entity.Channel" >
+    insert into CON_CHANNEL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="cenId != null" >
+        CEN_ID,
+      </if>
+      <if test="channelName != null" >
+        CHANNEL_NAME,
+      </if>
+      <if test="channelFlag != null" >
+        CHANNEL_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="cenId != null" >
+        #{cenId,jdbcType=DECIMAL},
+      </if>
+      <if test="channelName != null" >
+        #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelFlag != null" >
+        #{channelFlag,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.seecen.customer.entity.ChannelExample" resultType="java.lang.Integer" >
+    select count(*) from CON_CHANNEL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update CON_CHANNEL
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.cenId != null" >
+        CEN_ID = #{record.cenId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.channelName != null" >
+        CHANNEL_NAME = #{record.channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channelFlag != null" >
+        CHANNEL_FLAG = #{record.channelFlag,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update CON_CHANNEL
+    set ID = #{record.id,jdbcType=DECIMAL},
+      CEN_ID = #{record.cenId,jdbcType=DECIMAL},
+      CHANNEL_NAME = #{record.channelName,jdbcType=VARCHAR},
+      CHANNEL_FLAG = #{record.channelFlag,jdbcType=DECIMAL}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.seecen.customer.entity.Channel" >
+    update CON_CHANNEL
+    <set >
+      <if test="cenId != null" >
+        CEN_ID = #{cenId,jdbcType=DECIMAL},
+      </if>
+      <if test="channelName != null" >
+        CHANNEL_NAME = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelFlag != null" >
+        CHANNEL_FLAG = #{channelFlag,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.seecen.customer.entity.Channel" >
+    update CON_CHANNEL
+    set CEN_ID = #{cenId,jdbcType=DECIMAL},
+      CHANNEL_NAME = #{channelName,jdbcType=VARCHAR},
+      CHANNEL_FLAG = #{channelFlag,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="component/commons::head('列表页面')"> </head>
+
+  <body>
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">演示</a>
+        <a>
+          <cite>导航元素</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+      <div class="layui-row">
+        <form class="layui-form layui-col-md12 x-so">
+            <input type="hidden" name="pageNum">
+          <input class="layui-input" placeholder="开始日" name="start" id="start" th:value="${#dates.format(start,'yyyy-MM-dd')}">
+          <input class="layui-input" placeholder="截止日" name="end" id="end" th:value="${#dates.format(end,'yyyy-MM-dd')}">
+          <input type="text" name="customerName"  placeholder="请输入用户名" autocomplete="off" class="layui-input" th:value="${customerName}">
+          <div class="layui-input-inline">
+            <select name="centerId" id="centerId">
+              <option th:value="${centerId}">请选择中心</option>
+              <option th:each="center,S:${center}" th:value="${center.id}" th:text="${center.centerName}"></option>
+            </select>
+          </div>
+          <div class="layui-input-inline">
+            <select name="channelId" id="channelId" lay-search lay-verify="">
+              <option th:value="${channelId}">请选择渠道</option>
+              <option th:each="channel,S:${channel}" th:value="${channel.id}" th:text="${channel.channelName}"></option>
+            </select>
+          </div>
+          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+
+        </form>
+      </div>
+      <xblock>
+        <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+        <button class="layui-btn" onclick="x_admin_show('添加用户','/customer/add')"><i class="layui-icon"></i>添加</button>
+        <tr th:each="customer,S:${info.list}">
+          <td th:if="${S.count==1||S.count==0}">
+        <span th:onclick="|member_stop2(this,${customer.customerFlag})|" th:text="${customer.customerFlag==0?'客户':'学生'}" class="layui-btn layui-btn-normal" title="客户">客户</span>
+          </td>
+        </tr>
+        <span class="x-right" style="line-height:40px" th:text="|共有数据 ${info.total}条|">共有数据：88 条</span>
+      </xblock>
+      <table class="layui-table">
+        <thead>
+          <tr>
+            <th>
+              <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+            </th>
+            <th>序号</th>
+            <th>名字</th>
+            <th>性别</th>
+            <th>电话</th>
+            <th>加入时间</th>
+            <th>渠道</th>
+            <th>中心</th>
+            <th>角色</th>
+            <th>操作</th>
+        </thead>
+        <tbody>
+          <tr th:each="list,S:${info.list}">
+            <td>
+              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" th:data-id="${list.customerId}"><i class="layui-icon">&#xe605;</i></div>
+            </td>
+            <td th:text="${S.count}">1</td>
+            <td th:text="${list.customerName}">1</td>
+            <td th:text="${list.customerSex==1?'男':'女'}">男</td>
+            <td th:text="${list.customerPhone}">电话</td>
+            <td th:text="${#dates.format(list.customerDate,'yyyy-MM-dd')}">admin</td>
+            <td th:text="${list.channel.channelName}">渠道</td>
+            <td th:text="${list.center.centerName}">中心</td>
+            <td class="td-status">
+              <span class="layui-btn layui-btn-mini"
+                    th:classappend="${list.customerFlag==0?'':'layui-btn-danger'}"
+                    th:text="${list.customerFlag==0?'客户':'学生'}" th:onclick="|member_stop(this,${list.customerId})|">客户</span></td>
+            <td class="td-manage">
+              <a th:onclick="|member_stop(this,${list.customerId})|" href="javascript:;"  title="启用">
+                <i class="layui-icon">&#xe601;</i>
+              </a>
+<!--              <a title="编辑" onclick="x_admin_show('编辑','/adminSelect'+${list.userId})"  href="javascript:;">-->
+<!--                <i class="layui-icon">&#xe642;</i>-->
+<!--              </a>-->
+              <a title="编辑"  th:onclick="|x_admin_show('编辑','/customer/select/${list.customerId}')|" href="javascript:;">
+                <i class="layui-icon">&#xe642;</i>
+              </a>
+              <a title="删除" th:onclick="|member_del(this,${list.customerId})|" href="javascript:;">
+                <i class="layui-icon">&#xe640;</i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="page" th:replace="component/adminCommons::page"></div>
+
+      </div>
+
+    </div>
+    <script>
+        function go(n){
+            $("input[name=pageNum]").val(n);
+            $("form").submit();
+        }
+
+      layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#start' //指定元素
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#end' //指定元素
+        });
+      });
+
+        /*用户-类型修改*/
+        function member_stop(obj,id){
+          if (id==0){
+            layer.confirm('确认要修改客户为学生么？',function(index){
+              $.ajax({
+                url:"/customer/updateFlag/"+id,
+                type:"post",
+                dataType:"json",
+                success:function (e) {
+                  $(obj).parents("tr").remove();
+                  layer.msg('已修改!',{icon:1,time:1000});
+                }
+              })
+            });
+          }else {
+            layer.confirm('确认要修改学生为客户么？',function(index){
+              $.ajax({
+                url:"/customer/updateFlag/"+id,
+                type:"post",
+                dataType:"json",
+                success:function (e) {
+                  $(obj).parents("tr").remove();
+                  layer.msg('已修改!',{icon:1,time:1000});
+                }
+              })
+            });
+          }
+
+        }
+
+       /*学生-客户*/
+      function member_stop2(obj,id){
+
+              if(id==0){
+                location.href='/customer/pageList2',
+
+                $(obj).attr('title','学生')
+                $(obj).parents("xblock").find('span').html('学生');
+                layer.msg('已切换成学生!',{icon: 5,time:1000});
+              }else{
+                location.href='/customer/pageList',
+                    $(obj).attr('title','客户')
+                    $(obj).parents("xblock").find('span').html('客户');
+                    layer.msg('已切换成客户!',{icon: 5,time:1000});
+              }
+      }
+
+      /*用户-删除*/
+      function member_del(obj,customerId){
+          layer.confirm('确认要删除吗？',function(index){
+              //发异步删除数据
+              $.ajax({
+                  url:"/customer/delete/"+customerId,
+                  type:"post",
+                  dataType:"json",
+                success:function () {
+                  $(obj).parents("tr").remove();
+                  layer.msg('已删除!',{icon:1,time:1000});
+                }
+              })
+
+          });
+      }
+
+
+
+      function delAll (argument) {
+
+        var data = tableCheck.getData();
+  
+        layer.confirm('确认要删除吗？'+data,function(index){
+            //捉到所有被选中的，发异步进行删除
+            $.ajax({
+                url:"/customer/delAll",
+                type:"post",
+                dataType:"json",
+                data:JSON.stringify(data),
+                contentType:"application/json",
+                success:function (e) {
+                    layer.msg('删除成功', {icon: 1});
+                    $(".layui-form-checked").not('.header').parents('tr').remove();
+                    location.reload();
+                }
+            })
+
+        });
+      }
+    </script>
+  </body>
+
+</html>

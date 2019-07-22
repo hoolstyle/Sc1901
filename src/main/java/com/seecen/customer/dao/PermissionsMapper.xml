@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.PermissionsMapper" >
+  <resultMap id="BaseResultMap" type="com.seecen.customer.entity.Permissions" >
+    <id column="PER_ID" property="perId" jdbcType="DECIMAL" />
+    <result column="PER_DESCRIPTION" property="perDescription" jdbcType="VARCHAR" />
+    <result column="PER_ROLEID" property="perRoleid" jdbcType="DECIMAL" />
+    <result column="PER_AVAILABLE" property="perAvailable" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    PER_ID, PER_DESCRIPTION, PER_ROLEID, PER_AVAILABLE
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.seecen.customer.entity.PermissionsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from CON_PERMISSIONS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Short" >
+    select 
+    <include refid="Base_Column_List" />
+    from CON_PERMISSIONS
+    where PER_ID = #{perId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short" >
+    delete from CON_PERMISSIONS
+    where PER_ID = #{perId,jdbcType=DECIMAL}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.seecen.customer.entity.PermissionsExample" >
+    delete from CON_PERMISSIONS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.seecen.customer.entity.Permissions" >
+    insert into CON_PERMISSIONS (PER_ID, PER_DESCRIPTION, PER_ROLEID, 
+      PER_AVAILABLE)
+    values (#{perId,jdbcType=DECIMAL}, #{perDescription,jdbcType=VARCHAR}, #{perRoleid,jdbcType=DECIMAL}, 
+      #{perAvailable,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.seecen.customer.entity.Permissions" >
+    insert into CON_PERMISSIONS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="perId != null" >
+        PER_ID,
+      </if>
+      <if test="perDescription != null" >
+        PER_DESCRIPTION,
+      </if>
+      <if test="perRoleid != null" >
+        PER_ROLEID,
+      </if>
+      <if test="perAvailable != null" >
+        PER_AVAILABLE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="perId != null" >
+        #{perId,jdbcType=DECIMAL},
+      </if>
+      <if test="perDescription != null" >
+        #{perDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="perRoleid != null" >
+        #{perRoleid,jdbcType=DECIMAL},
+      </if>
+      <if test="perAvailable != null" >
+        #{perAvailable,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.seecen.customer.entity.PermissionsExample" resultType="java.lang.Integer" >
+    select count(*) from CON_PERMISSIONS
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update CON_PERMISSIONS
+    <set >
+      <if test="record.perId != null" >
+        PER_ID = #{record.perId,jdbcType=DECIMAL},
+      </if>
+      <if test="record.perDescription != null" >
+        PER_DESCRIPTION = #{record.perDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="record.perRoleid != null" >
+        PER_ROLEID = #{record.perRoleid,jdbcType=DECIMAL},
+      </if>
+      <if test="record.perAvailable != null" >
+        PER_AVAILABLE = #{record.perAvailable,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update CON_PERMISSIONS
+    set PER_ID = #{record.perId,jdbcType=DECIMAL},
+      PER_DESCRIPTION = #{record.perDescription,jdbcType=VARCHAR},
+      PER_ROLEID = #{record.perRoleid,jdbcType=DECIMAL},
+      PER_AVAILABLE = #{record.perAvailable,jdbcType=DECIMAL}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.seecen.customer.entity.Permissions" >
+    update CON_PERMISSIONS
+    <set >
+      <if test="perDescription != null" >
+        PER_DESCRIPTION = #{perDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="perRoleid != null" >
+        PER_ROLEID = #{perRoleid,jdbcType=DECIMAL},
+      </if>
+      <if test="perAvailable != null" >
+        PER_AVAILABLE = #{perAvailable,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where PER_ID = #{perId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.seecen.customer.entity.Permissions" >
+    update CON_PERMISSIONS
+    set PER_DESCRIPTION = #{perDescription,jdbcType=VARCHAR},
+      PER_ROLEID = #{perRoleid,jdbcType=DECIMAL},
+      PER_AVAILABLE = #{perAvailable,jdbcType=DECIMAL}
+    where PER_ID = #{perId,jdbcType=DECIMAL}
+  </update>
+</mapper>

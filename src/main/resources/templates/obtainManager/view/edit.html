@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="component/commons::head('某某某系统')"></head>
+
+<body>
+<script>
+    function checkOption(id,value) {
+        var select=document.getElementById(id);
+        var options=select.options;
+        for(var i=0;i<options.length;i++){
+            if(options[i].value==value){
+                options[i].selected=true;
+                break;
+            }
+        }
+    }
+</script>
+<div class="x-body">
+    <form class="layui-form">
+        <input type="hidden" name="viewId" th:value="${view.viewId}">
+        <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+                <span class="x-red">*</span>学员id
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="username" name="userId" required="" lay-verify="required"
+                       autocomplete="off"  class="layui-input" th:value="${view.userId}">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="phone" class="layui-form-label">
+                <span class="x-red">*</span>学员姓名
+            </label>
+            <div class="layui-input-inline">
+                <input type="text"  id="phone" name="userName" required="" lay-verify=""
+                       autocomplete="off" class="layui-input"th:value="${view.userName}">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="x-red">*</span>面试公司
+            </label>
+
+            <div class="layui-input-inline">
+               <!-- <input type="text"  id="L_email" name="remark" required="" lay-verify=""
+                       autocomplete="off" class="layui-input"th:value="${view.remark}">-->
+                <select id="viewCom" lay-search>
+                    <option th:each="com,S:${list}" th:text="${com.comName}"></option>
+                </select>
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="viewTime" class="layui-form-label">
+                <span class="x-red">*</span>面试时间
+            </label>
+            <div class="layui-input-inline">
+                <input class="layui-input" placeholder="" name="viewTime" id="viewTime"
+                       th:value="${#dates.format(view.viewTime,'yyyy-MM-dd')}">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+                <span class="x-red">*</span>面试状态
+            </label>
+            <div class="layui-input-inline">
+                <select name="conStatus" id="viewStatus">
+                    <option value="0">面试中</option>
+                    <option value="1">面试失败</option>
+                    <option value="2">面试成功</option>
+                </select>
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+            </div>
+        </div>
+       <div class="layui-form-item">
+            <label  class="layui-form-label">
+            </label>
+            <button class="layui-btn" lay-filter="add" lay-submit="">
+                修改
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+    var id=[[${view.conStatus}]];
+    checkOption('viewStatus',id);
+    var comid='[[${view.remark}]]';
+    checkOption('viewCom',comid);
+    layui.use('laydate',function(){
+        var laydate=layui.laydate;
+        $(this).removeAttr("lay-key");
+        laydate.render({
+            elem:'#viewTime',
+            trigger : 'click'
+        });
+    });
+
+    layui.use(['form', 'layer'], function () {
+        $ = layui.jquery;
+        var form = layui.form
+            , layer = layui.layer;
+
+        //自定义验证规则
+        form.verify({
+            nikename: function (value) {
+                if (value.length < 5) {
+                    return '昵称至少得5个字符啊';
+                }
+            }
+            , pass: [/(.+){6,12}$/, '密码必须6到12位']
+            , repass: function (value) {
+                if ($('#L_pass').val() != $('#L_repass').val()) {
+                    return '两次密码不一致';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(add)', function (data) {
+            console.log(data);
+            //发异步，把数据提交给php
+            $.ajax({
+                url:"/view/update",
+                data:data.field,
+                type:"post",
+                dataType:"json",
+                success:function (r) {
+                    if(r==1){
+                        layer.alert("修改成功", {icon: 6}, function () {
+                            // 获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            //关闭当前frame
+                            parent.layer.close(index);
+                            parent.location.reload();
+                        });
+                    }else {
+                        layer.alert("修改失败",{icon:5});
+                    }
+                }
+            })
+            return false;
+        });
+
+
+    });
+</script>
+</body>
+
+</html>

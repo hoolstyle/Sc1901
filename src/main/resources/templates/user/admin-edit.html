@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<script src="/js/jquery.min.js"></script>
+<head th:replace="component/adminCommons::head('列表页面')"></head>
+  
+  <body>
+    <div class="x-body">
+        <form class="layui-form" th:each="user,S:${user}">
+            <input type="hidden" th:value="${user.userId}" name="userId">
+          <div class="layui-form-item">
+              <label for="username" class="layui-form-label">
+                  <span class="x-red">*</span>登录名
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="username" name="userName" required="" lay-verify="required"
+                  autocomplete="off" th:value="${user.userName}" class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>将会成为您唯一的登入名
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="phone" class="layui-form-label">
+                  <span class="x-red">*</span>手机
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" th:value="${user.userPhone}" id="phone" name="userPhone" required="" lay-verify="phone"
+                  autocomplete="off" class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>
+              </div>
+          </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="x-red">*</span>性别</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="userSex" value="1" lay-skin="primary" title="男"
+                           th:checked="${user.userSex eq 1}">
+                    <input type="radio" name="userSex" value="0" lay-skin="primary" title="女"
+                           th:checked="${user.userSex eq 0}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="username" class="layui-form-label">
+                    <span class="x-red">*</span>盐值
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text"  name="userSalt" required="" lay-verify="required"
+                           autocomplete="off" th:value="${user.userSalt}" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <span class="x-red">*</span>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label  class="layui-form-label">
+                    <span class="x-red">*</span>时间
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text"  name="userCreatetime" required="" lay-verify="required"
+                           th:value="${#dates.format(user.userCreatetime,'yyyy-MM-dd HH:mm:ss')}"
+                           class="layui-input"  id="test5" placeholder="yyyy-MM-dd HH:mm:ss">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label  class="layui-form-label">
+                    <span class="x-red">*</span>状态
+                </label>
+            <div class="layui-input-block" style="width: 190px;">
+                <select lay-verify="required" name="userStatus" lay-filter="column">
+                    <option value="0" th:selected="${user.userStatus eq 0}">已启用</option>
+                    <option value="1" th:selected="${user.userStatus eq 1}">未启用</option>
+                </select>
+            </div>
+            </div>
+
+
+          <div class="layui-form-item">
+              <label for="L_pass" class="layui-form-label">
+                  <span class="x-red">*</span>密码
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="L_pass" th:value="${user.userPsw}" name="userPsw" required="" lay-verify="pass"
+                  autocomplete="off" class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  6到16个字符
+              </div>
+          </div>
+
+          <div class="layui-form-item">
+              <label for="L_pass" class="layui-form-label">
+              </label>
+              <button  class="layui-btn" lay-filter="add" lay-submit="">
+                  修改
+              </button>
+          </div>
+      </form>
+    </div>
+    <script>
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#test5' //指定元素
+                ,type: 'datetime'
+            });
+        });
+
+
+        layui.use(['form','layer'], function(){
+            $ = layui.jquery;
+          var form = layui.form
+          ,layer = layui.layer;
+        
+          //自定义验证规则
+          form.verify({
+            nikename: function(value){
+              if(value.length < 5){
+                return '昵称至少得5个字符啊';
+              }
+            }
+            ,pass: [/(.+){6,12}$/, '密码必须6到12位']
+            ,repass: function(value){
+                if($('#L_pass').val()!=$('#L_repass').val()){
+                    return '两次密码不一致';
+                }
+            }
+          });
+
+          //监听提交
+          form.on('submit(add)', function(data){
+            console.log(data);
+              //发异步删除数据
+              $.ajax({
+                  url:"/user/save",
+                  type:"post",
+                  data:data.field,
+                  dataType:"json",
+                  success:function (r) {
+                      if(r==1){
+                          layer.alert("修改成功", {icon: 6},function () {
+                              parent.location.reload();
+                          });
+                      }else {
+                          layer.alert("修改失败", {icon: 5},function () {
+                              parent.location.reload();
+                          });
+                      }
+                  }
+              })
+            return false;
+          });
+          
+          
+        });
+    </script>
+  </body>
+
+</html>

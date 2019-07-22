@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.UserDaoMapper" >
+    <resultMap id="BaseResultMap" type="com.seecen.customer.entity.User" >
+        <id column="USER_ID" property="userId" jdbcType="DECIMAL" />
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+        <result column="USER_PSW" property="userPsw" jdbcType="VARCHAR" />
+        <result column="USER_ICON" property="userIcon" jdbcType="VARCHAR" />
+        <result column="USER_SEX" property="userSex" jdbcType="DECIMAL" />
+        <result column="USER_PHONE" property="userPhone" jdbcType="VARCHAR" />
+        <result column="USER_SALT" property="userSalt" jdbcType="VARCHAR" />
+        <result column="USER_CREATETIME" property="userCreatetime" jdbcType="TIMESTAMP" />
+        <result column="USER_STATUS" property="userStatus" jdbcType="DECIMAL" />
+        <result column="USER_REMARK" property="userRemark" jdbcType="VARCHAR" />
+        <result column="ROLE_ID" property="roleId" jdbcType="DECIMAL" />
+        <result column="TEAM_ID" property="teamId"/>
+        <collection property="roles" ofType="com.seecen.customer.entity.Role">
+            <id column="role_id" property="roleId"/>
+            <result column="role_name" property="roleName"/>
+            <result column="role_description" property="roleDescription"/>
+            <result column="role_pid" property="rolePid"/>
+            <result column="role_available" property="roleAvailable"/>
+        </collection>
+    </resultMap>
+    <select id="findAllUser" parameterType="com.seecen.customer.entity.User" resultMap="BaseResultMap">
+
+    </select>
+
+
+
+    <select id="findByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT * from CON_USER where USER_NAME = #{userName} and USER_STATUS = 0
+    </select>
+    
+    <select id="findUserRoleByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select a.user_id, role_name from CON_USER a
+        inner join CON_ROLE b on a.ROLE_ID=b.ROLE_ID
+        where user_name=#{userName}
+    </select>
+
+
+
+    <resultMap id="BaseResultMap2" type="com.seecen.customer.entity.Permissions" >
+        <result column="per_description" property="perDescription" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="findUserPermsByName" parameterType="java.lang.String"
+            resultMap="BaseResultMap2">
+        select distinct a.user_id, c.PER_DESCRIPTION
+        from CON_USER a
+        inner join CON_USERS_ROLES b
+        on a.user_id = b.user_id
+        inner join CON_PERMISSIONS c
+        on b.role_id = c.PER_ROLEID
+        where user_name = #{userName}
+    </select>
+</mapper>

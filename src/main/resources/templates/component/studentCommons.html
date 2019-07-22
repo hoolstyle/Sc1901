@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <title th:text="${title}"></title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <base th:href="@{/}" />
+    <link rel="shortcut icon"  th:href="@{/favicon.ico}" type="image/x-icon" />
+    <link rel="stylesheet" th:href="@{/css/font.css}" >
+    <link rel="stylesheet"  th:href="@{/css/xadmin.css}" >
+    <script type="text/javascript" th:src="@{https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js}"></script>
+    <script  th:src="@{/lib/layui/layui.js}" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/js/xadmin.js}"></script>
+</head>
+
+
+
+<div class="page" th:fragment="page">
+    <div>
+        <a class="prev" href="javascript:go(1)">&lt;&lt;</a>
+        <a class="prev" th:href="@{|javascript:go(${pageInfo.prePage})|}">&lt;</a>
+        <a href="" th:each="num : ${pageInfo.navigatepageNums}"
+           th:href="@{|javascript:go(${num})|}"
+           th:utext="${num==pageInfo.pageNum?'<span class=current>'+num+'</span>':num}"
+           th:remove="${num==pageInfo.pageNum?'tag':'none'}"
+        >9</a>
+        <a class="next" href="" th:href="@{|javascript:go(${pageInfo.nextPage})|}">&gt;</a>
+        <a class="next" href="" th:href="@{|javascript:go(${pageInfo.pages})|}">&gt;&gt;</a>
+        <script>
+            function go(n){
+                $("input[name=pageNum]").val(n);
+                $("form").submit();
+            }
+        </script>
+    </div>
+</div>
+
+
+
+<footer th:fragment="copy">
+    <div class="copyright">Copyright ©2017 x-admin v2.3 All Rights Reserved</div>
+</footer>
+
+
+
+
+</html>

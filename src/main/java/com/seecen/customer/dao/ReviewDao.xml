@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seecen.customer.dao.ReviewDao" >
+  <resultMap id="BaseResultMap" type="com.seecen.customer.entity.Review" >
+    <id column="REVIEW_ID" property="reviewId" jdbcType="DECIMAL" />
+    <result column="REVIEW_PROJECT" property="reviewProject" jdbcType="VARCHAR" />
+    <result column="REVIEW_CASE" property="reviewCase" jdbcType="VARCHAR" />
+    <result column="REVIEW_GRADE" property="reviewGrade" jdbcType="VARCHAR" />
+    <result column="CUSTOMER_ID" property="customerId" jdbcType="DECIMAL" />
+    <result column="TEAM_ID" property="teamId" jdbcType="DECIMAL" />
+    <result column="REVIEW_REMARK" property="reviewRemark" jdbcType="VARCHAR" />
+    <result column="REVIEW_FLAG" property="reviewFlag" jdbcType="DECIMAL" />
+  </resultMap>
+
+  <select id="findReviewByTeacher" resultType="com.seecen.customer.entity.Review">
+    select  c.*,a.USER_NAME from CON_USER a right join CON_TEAM b on a.TEAM_ID=b.TEAM_ID right join  CON_REVIEW c on b.TEAM_ID=c.TEAM_ID
+    <where>
+      <if test="userName!=null and userName.length()>0">
+        a.USER_NAME like '%${userName}%'
+      </if>
+    </where>
+  </select>
+
+</mapper>
